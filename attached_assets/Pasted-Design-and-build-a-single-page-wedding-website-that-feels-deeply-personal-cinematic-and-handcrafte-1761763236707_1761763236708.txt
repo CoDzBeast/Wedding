@@ -1,0 +1,61 @@
+Design and build a single-page wedding website that feels deeply personal, cinematic, and handcrafted — inspired by thefutureharrisons.wedsites.com but with a completely original structure and tone.
+
+The layout should use scroll-anchored sections with a fixed top toolbar for navigation.
+Toolbar links: Home, Our Story, Wedding Details, Itinerary, Registry, Local Stays, and RSVP.
+
+🕊️ Hero Section
+
+Center the couple’s names in refined typography — think editorial, not digital.
+
+Include a countdown timer to the wedding day that feels naturally integrated, like part of the typography — not a boxed widget.
+
+Use a warm, cinematic background (soft neutral texture or lightly faded photo), setting the emotional tone.
+
+Add a simple, heartfelt welcome line or date just beneath the countdown.
+
+🌿 Our Story
+
+Tell the couple’s journey as a narrative rather than bullet points — minimal design, intentional whitespace, subtle dividers or leaf-like flourishes.
+The pacing should feel like reading a page from a love-letter or a slow pan in a film.
+
+📍 Wedding Details
+
+Clean, balanced layout for ceremony and reception information.
+Include times, addresses, attire guidance, and a “Get Directions” link — all styled like refined printed text.
+Avoid icons, boxes, or cards. Focus on typography and alignment.
+
+🕰️ Itinerary
+
+Display the wedding-day timeline as a seamless flow — either a vertical journey down the page or a soft horizontal scroll.
+Each entry (e.g., 2 PM – Ceremony Begins, 5 PM – Dinner Served, 8 PM – Dancing Under the Lights) should appear in graceful rhythm with the page.
+Keep motion subtle — soft fades or gentle slides on scroll.
+
+🎁 Registry
+
+Elegant, minimal layout that lists registry links with equal spacing and visual balance.
+Each registry (e.g., Target, Amazon, Honeyfund) can appear as a stylized text button — no logos, no heavy graphics.
+The goal: refined generosity, not retail noise.
+
+🏡 Local Stays
+
+Section for recommended hotels or accommodations near the venue.
+Layout idea: a curated list with short descriptions and links to booking pages — styled like an editorial travel note, not a card grid.
+Keep it elegant and welcoming: use location names, distances, and brief notes (e.g., “2 min walk from venue,” “Includes breakfast,” “Family-friendly”).
+
+💌 RSVP
+
+A clean, minimalist RSVP form — transparent inputs, soft fade-in on scroll, no boxes or outlines.
+Subtle confirmation message after submission, matching the site’s tone.
+
+✨ Overall Aesthetic
+
+Color Palette: soft ivory, parchment, sage, olive, muted gold
+
+Typography: modern serif (for body) + handwritten or script accent (for names and headers)
+
+Motion: subtle parallax, gentle fades, slow scroll reveals — never over-animated
+
+Feel: timeless, filmic, intimate — like a handcrafted invitation quietly coming alive.
+
+Avoid all template clichés: no boxed cards, gradients, geometric backgrounds, floating shapes, or generic icons.
+Every element should feel chosen, not generated.
