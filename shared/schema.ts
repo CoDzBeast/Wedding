@@ -9,8 +9,8 @@ export const rsvps = pgTable("rsvps", {
   email: text("email").notNull(),
   attending: boolean("attending").notNull(),
   guestCount: integer("guest_count").notNull().default(1),
-  dietaryRestrictions: text("dietary_restrictions"),
-  message: text("message"),
+  dietaryRestrictions: text("dietary_restrictions").default(""),
+  message: text("message").default(""),
 });
 
 export const insertRsvpSchema = createInsertSchema(rsvps).omit({

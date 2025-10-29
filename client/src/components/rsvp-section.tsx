@@ -242,6 +242,7 @@ export function RsvpSection() {
                         <FormControl>
                           <Input
                             {...field}
+                            value={field.value || ""}
                             className="border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
                             data-testid="input-dietary"
                           />
@@ -264,6 +265,7 @@ export function RsvpSection() {
                     <FormControl>
                       <Textarea
                         {...field}
+                        value={field.value || ""}
                         rows={4}
                         className="border border-border rounded-md bg-transparent font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors resize-none"
                         data-testid="input-message"

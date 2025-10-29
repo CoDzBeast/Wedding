@@ -16,7 +16,12 @@ export class MemStorage implements IStorage {
 
   async createRsvp(insertRsvp: InsertRsvp): Promise<Rsvp> {
     const id = randomUUID();
-    const rsvp: Rsvp = { ...insertRsvp, id };
+    const rsvp: Rsvp = { 
+      ...insertRsvp, 
+      id,
+      dietaryRestrictions: insertRsvp.dietaryRestrictions || "",
+      message: insertRsvp.message || "",
+    };
     this.rsvps.set(id, rsvp);
     return rsvp;
   }
