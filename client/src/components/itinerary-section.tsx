@@ -1,0 +1,68 @@
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+
+const timelineEvents = [
+  { time: "3:30 PM", title: "Guests Arrive", description: "Welcome reception with light refreshments" },
+  { time: "4:00 PM", title: "Ceremony Begins", description: "Join us as we exchange our vows" },
+  { time: "4:45 PM", title: "Cocktail Hour", description: "Champagne and hors d'oeuvres on the terrace" },
+  { time: "6:00 PM", title: "Reception & Dinner", description: "A celebration feast under the stars" },
+  { time: "8:00 PM", title: "First Dance", description: "The newlyweds take the floor" },
+  { time: "8:30 PM", title: "Dancing & Celebration", description: "Dance the night away with us" },
+  { time: "11:00 PM", title: "Sparkler Send-Off", description: "A magical farewell under the night sky" },
+];
+
+export function ItinerarySection() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <section
+      id="itinerary"
+      ref={ref}
+      className="py-24 sm:py-32 px-6 bg-background"
+    >
+      <div className="max-w-3xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="font-serif text-4xl sm:text-5xl text-center text-foreground mb-16 font-light tracking-wide"
+          data-testid="text-itinerary-title"
+        >
+          Itinerary
+        </motion.h2>
+
+        <div className="space-y-0">
+          {timelineEvents.map((event, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="relative pb-12 last:pb-0"
+              data-testid={`itinerary-item-${index}`}
+            >
+              <div className="flex flex-col sm:flex-row sm:items-baseline gap-4 sm:gap-8">
+                <div className="font-serif text-lg sm:text-xl text-primary font-medium whitespace-nowrap min-w-[100px]" data-testid={`text-time-${index}`}>
+                  {event.time}
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-2" data-testid={`text-event-title-${index}`}>
+                    {event.title}
+                  </h3>
+                  <p className="font-sans text-base text-muted-foreground leading-relaxed" data-testid={`text-event-description-${index}`}>
+                    {event.description}
+                  </p>
+                </div>
+              </div>
+              {index < timelineEvents.length - 1 && (
+                <div className="absolute left-0 sm:left-[100px] bottom-0 w-px h-12 bg-border/50 ml-12 sm:ml-4" />
+              )}
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
