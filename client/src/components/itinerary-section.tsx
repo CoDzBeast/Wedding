@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
 import { useRef } from "react";
 
 const timelineEvents = [
@@ -14,7 +12,6 @@ const timelineEvents = [
 
 export function ItinerarySection() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <section
@@ -23,23 +20,17 @@ export function ItinerarySection() {
       className="py-24 sm:py-32 px-6 bg-background"
     >
       <div className="max-w-3xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="font-serif text-4xl sm:text-5xl text-center text-foreground mb-16 font-light tracking-wide"
+        <h2
+          className="font-script text-4xl sm:text-5xl text-center text-foreground mb-16 font-light tracking-wide"
           data-testid="text-itinerary-title"
         >
           Itinerary
-        </motion.h2>
+        </h2>
 
         <div className="space-y-0">
           {timelineEvents.map((event, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
               className="relative pb-12 last:pb-0"
               data-testid={`itinerary-item-${index}`}
             >
@@ -59,7 +50,7 @@ export function ItinerarySection() {
               {index < timelineEvents.length - 1 && (
                 <div className="absolute left-0 sm:left-[100px] bottom-0 w-px h-12 bg-border/50 ml-12 sm:ml-4" />
               )}
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

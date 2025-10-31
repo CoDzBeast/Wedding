@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +20,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export function RsvpSection() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
@@ -67,12 +64,8 @@ export function RsvpSection() {
         className="py-24 sm:py-32 px-6 bg-card"
       >
         <div className="max-w-md mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="font-serif text-4xl text-foreground mb-6" data-testid="text-rsvp-success-title">
+          <div>
+            <h2 className="font-script text-4xl text-foreground mb-6" data-testid="text-rsvp-success-title">
               Thank You!
             </h2>
             <p className="font-sans text-lg text-muted-foreground leading-relaxed mb-8" data-testid="text-rsvp-success-message">
@@ -85,7 +78,7 @@ export function RsvpSection() {
             >
               Submit Another Response
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
     );
@@ -98,31 +91,21 @@ export function RsvpSection() {
       className="py-24 sm:py-32 px-6 bg-card"
     >
       <div className="max-w-md mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="font-serif text-4xl sm:text-5xl text-center text-foreground mb-8 font-light tracking-wide"
+        <h2
+          className="font-script text-4xl sm:text-5xl text-center text-foreground mb-8 font-light tracking-wide"
           data-testid="text-rsvp-title"
         >
           RSVP
-        </motion.h2>
+        </h2>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
+        <p
           className="font-sans text-base text-center text-muted-foreground mb-12 leading-relaxed"
           data-testid="text-rsvp-message"
         >
           Please respond by August 1, 2025
-        </motion.p>
+        </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
+        <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
@@ -286,7 +269,7 @@ export function RsvpSection() {
               </Button>
             </form>
           </Form>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

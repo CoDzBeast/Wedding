@@ -71,11 +71,24 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  // Use a more compatible approach for Windows
+  server.listen(port, () => {
     log(`serving on port ${port}`);
+    // Also log the network IP for access from other devices
+    try {
+      const { networkInterfaces } = require('os');
+      const nets = networkInterfaces();
+      for (const [name, net] of Object.entries(nets)) {
+        if (!name.startsWith('Loopback') && net) {
+          for (const iface of net as Array<{internal: boolean, family: string, address: string}>) {
+            if (!iface.internal && iface.family === 'IPv4') {
+              log(`Network access: http://${iface.address}:${port}`);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      log('Could not determine network interfaces');
+    }
   });
 })();

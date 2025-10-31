@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
 import { useRef } from "react";
 
 const hotels = [
@@ -31,7 +29,6 @@ const hotels = [
 
 export function LocalStaysSection() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <section
@@ -40,34 +37,25 @@ export function LocalStaysSection() {
       className="py-24 sm:py-32 px-6 bg-background"
     >
       <div className="max-w-3xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="font-serif text-4xl sm:text-5xl text-center text-foreground mb-8 font-light tracking-wide"
+        <h2
+          className="font-script text-4xl sm:text-5xl text-center text-foreground mb-8 font-light tracking-wide"
           data-testid="text-local-stays-title"
         >
           Local Stays
-        </motion.h2>
+        </h2>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
+        <p
           className="font-sans text-lg text-center text-muted-foreground mb-16 leading-relaxed"
           data-testid="text-local-stays-message"
         >
           We've curated a selection of accommodations near our venue to make
           your stay as comfortable as possible.
-        </motion.p>
+        </p>
 
         <div className="space-y-12">
           {hotels.map((hotel, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
               className="border-b border-border pb-12 last:border-b-0 last:pb-0"
               data-testid={`hotel-item-${index}`}
             >
@@ -93,7 +81,7 @@ export function LocalStaysSection() {
                   Book Now
                 </a>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

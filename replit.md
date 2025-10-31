@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a single-page wedding website for Emily & James' September 14, 2025 celebration in Napa Valley, California. The site features a cinematic, editorial design inspired by high-end wedding publications with a handcrafted, intimate aesthetic. Built as a full-stack application with React frontend and Express backend, it includes sections for the couple's story, wedding details, itinerary, registry, local accommodations, and RSVP functionality.
+This is a single-page wedding website for Samantha and Zachary's September 14, 2025 celebration in Napa Valley, California. The site features a cinematic, editorial design inspired by high-end wedding publications with a handcrafted, intimate aesthetic. Built as a full-stack application with React frontend and Express backend, it includes sections for the couple's story, wedding details, itinerary, registry, local accommodations, and RSVP functionality.
 
 ## User Preferences
 

@@ -3,7 +3,16 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
+// Get the repository name for GitHub Pages
+const getBase = () => {
+  // For GitHub Pages, the base should be the repository name
+  // You can customize this based on your actual repository name
+  const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1] || '';
+  return process.env.NODE_ENV === "production" ? `/${repoName}/` : "/";
+};
+
 export default defineConfig({
+  base: getBase(),
   plugins: [
     react(),
     runtimeErrorOverlay(),

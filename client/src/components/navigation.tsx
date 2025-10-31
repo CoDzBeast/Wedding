@@ -48,9 +48,9 @@ export function Navigation({ activeSection }: NavigationProps) {
           scrolled
             ? "bg-background/95 backdrop-blur-md shadow-sm"
             : "bg-transparent"
-        }`}
+        } w-full max-w-full overflow-x-hidden`}
       >
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-6 py-4 w-full">
           <div className="hidden md:flex items-center justify-center gap-8">
             {navLinks.map((link) => (
               <button
@@ -77,7 +77,7 @@ export function Navigation({ activeSection }: NavigationProps) {
               className="font-script text-2xl text-foreground"
               data-testid="link-home-mobile"
             >
-              E & J
+              S & Z
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -112,7 +112,7 @@ export function Navigation({ activeSection }: NavigationProps) {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
+        <div className="fixed inset-0 z-40 md:hidden overflow-hidden">
           <div
             className="absolute inset-0 bg-background/95 backdrop-blur-md"
             onClick={() => setMobileMenuOpen(false)}

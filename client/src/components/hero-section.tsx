@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import heroImage from "@assets/generated_images/Cinematic_golden_hour_landscape_background_8a331fd2.png";
 
 export function HeroSection() {
-  const weddingDate = new Date("2025-09-14T16:00:00");
+  const weddingDate = new Date("2025-11-08T16:00:00");
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -35,7 +35,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative h-screen flex items-center justify-center overflow-hidden"
+      className="relative h-screen flex items-center justify-center overflow-hidden w-full max-w-full"
     >
       <motion.div
         className="absolute inset-0"
@@ -59,7 +59,7 @@ export function HeroSection() {
           className="font-script text-6xl sm:text-7xl md:text-8xl text-foreground mb-8"
           data-testid="text-couple-names"
         >
-          Emily & James
+          Samantha and Zachary
         </motion.h1>
 
         <motion.div
@@ -68,18 +68,39 @@ export function HeroSection() {
           transition={{ duration: 1, delay: 0.6 }}
           className="mb-8"
         >
-          <div
-            className="flex items-center justify-center gap-3 text-foreground/90 font-serif text-lg sm:text-xl mb-4"
-            data-testid="text-countdown"
-          >
-            <span className="font-medium">{timeRemaining.days}</span>
-            <span className="text-sm text-muted-foreground">days</span>
-            <span className="text-muted-foreground">·</span>
-            <span className="font-medium">{timeRemaining.hours}</span>
-            <span className="text-sm text-muted-foreground">hours</span>
-            <span className="text-muted-foreground">·</span>
-            <span className="font-medium">{timeRemaining.minutes}</span>
-            <span className="text-sm text-muted-foreground">minutes</span>
+          <div className="grid grid-cols-4 gap-4 md:gap-8">
+            <div className="flex flex-col items-center">
+              <div className="text-4xl md:text-6xl font-serif text-foreground font-semibold mb-2">
+                {String(timeRemaining.days).padStart(2, '0')}
+              </div>
+              <div className="text-sm md:text-base font-serif text-foreground uppercase tracking-wider">
+                Days
+              </div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-4xl md:text-6xl font-serif text-foreground font-semibold mb-2">
+                {String(timeRemaining.hours).padStart(2, '0')}
+              </div>
+              <div className="text-sm md:text-base font-serif text-foreground uppercase tracking-wider">
+                Hours
+              </div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-4xl md:text-6xl font-serif text-foreground font-semibold mb-2">
+                {String(timeRemaining.minutes).padStart(2, '0')}
+              </div>
+              <div className="text-sm md:text-base font-serif text-foreground uppercase tracking-wider">
+                Minutes
+              </div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-4xl md:text-6xl font-serif text-foreground font-semibold mb-2">
+                {String(timeRemaining.seconds).padStart(2, '0')}
+              </div>
+              <div className="text-sm md:text-base font-serif text-foreground uppercase tracking-wider">
+                Seconds
+              </div>
+            </div>
           </div>
         </motion.div>
 
@@ -87,10 +108,10 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.9 }}
-          className="font-serif text-base sm:text-lg text-muted-foreground"
+          className="font-serif text-lg sm:text-xl md:text-2xl text-foreground font-semibold"
         >
           <p className="mb-2" data-testid="text-wedding-date">
-            September 14, 2025
+            November 8, 2025
           </p>
           <p data-testid="text-wedding-location">Napa Valley, California</p>
         </motion.div>

@@ -8,6 +8,41 @@ import { RegistrySection } from "@/components/registry-section";
 import { LocalStaysSection } from "@/components/local-stays-section";
 import { RsvpSection } from "@/components/rsvp-section";
 
+// Divider components with decorative floral elements
+const DividerA = () => (
+  <div className="section-divider divider-a relative h-0 my-0">
+    <div className="absolute top-0 left-0 -translate-y-1/2 -translate-x-1/2 opacity-60 rotate-45 transform origin-center">
+      <img 
+        src="/4F84008B-85FE-4915-AA1C-55C2D45CF9AE.png"
+        alt="Decorative border element"
+        className="w-auto h-auto max-w-none"
+        style={{
+          display: 'block',
+          maxWidth: '200px',
+          maxHeight: '200px'
+        }}
+      />
+    </div>
+  </div>
+);
+
+const DividerB = () => (
+  <div className="section-divider divider-b relative h-0 my-0">
+    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 opacity-60 -rotate-45 transform origin-center">
+      <img 
+        src="/4F84008B-85FE-4915-AA1C-55C2D45CF9AE.png"
+        alt="Decorative border element"
+        className="w-auto h-auto max-w-none"
+        style={{
+          display: 'block',
+          maxWidth: '200px',
+          maxHeight: '200px'
+        }}
+      />
+    </div>
+  </div>
+);
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState("hero");
 
@@ -47,14 +82,19 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background w-full max-w-full overflow-x-hidden relative">
       <Navigation activeSection={activeSection} />
       <HeroSection />
       <OurStorySection />
+      <DividerB />
       <WeddingDetailsSection />
+      <DividerA />
       <ItinerarySection />
+      <DividerB />
       <RegistrySection />
+      <DividerA />
       <LocalStaysSection />
+      <DividerB />
       <RsvpSection />
     </div>
   );
