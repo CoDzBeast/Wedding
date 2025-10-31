@@ -3,13 +3,8 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-// Hardcode the repository name for GitHub Pages
-const getBase = () => {
-  return process.env.NODE_ENV === "production" ? "/Wedding/" : "/";
-};
-
 export default defineConfig({
-  base: getBase(),
+  base: "/Wedding/",
   plugins: [
     react(),
     runtimeErrorOverlay(),
