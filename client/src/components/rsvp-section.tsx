@@ -1,59 +1,77 @@
 import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { insertRsvpSchema, type InsertRsvp } from "@shared/schema";
-import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export function RsvpSection() {
   const ref = useRef(null);
   const [submitted, setSubmitted] = useState(false);
-  const { toast } = useToast();
-
-  const form = useForm<InsertRsvp>({
-    resolver: zodResolver(insertRsvpSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      attending: true,
-      guestCount: 1,
-      dietaryRestrictions: "",
-      message: "",
-    },
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    attending: "Joyfully accepts",
+    guestCount: 1,
   });
 
-  const rsvpMutation = useMutation({
-    mutationFn: async (data: InsertRsvp) => {
-      return await apiRequest("POST", "/api/rsvp", data);
-    },
-    onSuccess: () => {
-      setSubmitted(true);
-      form.reset();
-    },
-    onError: (error: any) => {
-      toast({
-        variant: "destructive",
-        title: "Failed to submit RSVP",
-        description: error.message || "Please try again later.",
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleRadioChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      attending: value
+    }));
+  };
+
+  const handleGuestCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      guestCount: parseInt(e.target.value) || 1
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Create form data for Jotform submission
+    const jotformData = new FormData();
+    jotformData.append("q3_name[first]", formData.firstName);
+    jotformData.append("q3_name[last]", formData.lastName);
+    jotformData.append("q4_email", formData.email);
+    jotformData.append("q5_willYou", formData.attending);
+    jotformData.append("q6_numberOf", formData.guestCount.toString());
+    
+    try {
+      const response = await fetch("https://submit.jotform.com/submit/253035511518046", {
+        method: "POST",
+        body: jotformData,
+        headers: {
+          "Accept": "application/json"
+        }
       });
-    },
-  });
+      
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        alert("There was an error submitting your RSVP. Please try again.");
+      }
+    } catch (error) {
+      alert("There was an error submitting your RSVP. Please try again.");
+    }
+  };
 
-  const onSubmit = async (data: InsertRsvp) => {
-    rsvpMutation.mutate(data);
+  const handleReset = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      attending: "Joyfully accepts",
+      guestCount: 1,
+    });
+    setSubmitted(false);
   };
 
   if (submitted) {
@@ -69,15 +87,15 @@ export function RsvpSection() {
               Thank You!
             </h2>
             <p className="font-sans text-lg text-muted-foreground leading-relaxed mb-8" data-testid="text-rsvp-success-message">
-              We've received your RSVP and can't wait to celebrate with you.
+              🎉 We've received your RSVP and can't wait to celebrate with you.
             </p>
-            <Button
-              variant="outline"
-              onClick={() => setSubmitted(false)}
+            <button
+              onClick={handleReset}
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground min-h-9 px-4 py-2 font-serif text-base tracking-wide"
               data-testid="button-submit-another"
             >
               Submit Another Response
-            </Button>
+            </button>
           </div>
         </div>
       </section>
@@ -106,169 +124,129 @@ export function RsvpSection() {
         </p>
 
         <div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-serif text-sm text-foreground">
-                      Full Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
-                        data-testid="input-name"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-2">
+              <label className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-serif text-sm text-foreground">
+                Full Name
+              </label>
+              <div className="flex gap-2">
+                <input
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="First"
+                  required
+                  className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
+                  data-testid="input-first-name"
+                />
+                <input
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Last"
+                  required
+                  className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
+                  data-testid="input-last-name"
+                />
+              </div>
+            </div>
 
-              <FormField
-                control={form.control}
+            <div className="space-y-2">
+              <label className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-serif text-sm text-foreground">
+                Email Address
+              </label>
+              <input
+                type="email"
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-serif text-sm text-foreground">
-                      Email Address
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="email"
-                        className="border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
-                        data-testid="input-email"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
+                data-testid="input-email"
               />
+            </div>
 
-              <FormField
-                control={form.control}
+            <div className="space-y-2">
+              <label className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-serif text-sm text-foreground mb-4 block">
+                Will you be attending?
+              </label>
+              <div className="flex gap-8">
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => handleRadioChange("Joyfully accepts")}
+                    className={`attending-option aspect-square h-4 w-4 rounded-full border focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formData.attending === "Joyfully accepts" ? "border-primary" : "border-border"}`}
+                    data-value="Joyfully accepts"
+                  >
+                    {formData.attending === "Joyfully accepts" && (
+                      <span className="checkmark flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-circle h-2.5 w-2.5 fill-current text-current">
+                          <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                      </span>
+                    )}
+                  </button>
+                  <label
+                    onClick={() => handleRadioChange("Joyfully accepts")}
+                    className="font-sans text-base text-foreground cursor-pointer"
+                  >
+                    Joyfully accepts
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => handleRadioChange("Regretfully declines")}
+                    className={`attending-option aspect-square h-4 w-4 rounded-full border focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formData.attending === "Regretfully declines" ? "border-primary" : "border-border"}`}
+                    data-value="Regretfully declines"
+                  >
+                    {formData.attending === "Regretfully declines" && (
+                      <span className="checkmark flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-circle h-2.5 w-2.5 fill-current text-current">
+                          <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                      </span>
+                    )}
+                  </button>
+                  <label
+                    onClick={() => handleRadioChange("Regretfully declines")}
+                    className="font-sans text-base text-foreground cursor-pointer"
+                  >
+                    Regretfully declines
+                  </label>
+                </div>
+              </div>
+              <input
+                type="hidden"
                 name="attending"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-serif text-sm text-foreground mb-4 block">
-                      Will you be attending?
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={(value) => field.onChange(value === "true")}
-                        defaultValue={field.value ? "true" : "false"}
-                        className="flex gap-8"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="true" id="attending-yes" data-testid="radio-attending-yes" />
-                          <label
-                            htmlFor="attending-yes"
-                            className="font-sans text-base text-foreground cursor-pointer"
-                          >
-                            Joyfully accepts
-                          </label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="false" id="attending-no" data-testid="radio-attending-no" />
-                          <label
-                            htmlFor="attending-no"
-                            className="font-sans text-base text-foreground cursor-pointer"
-                          >
-                            Regretfully declines
-                          </label>
-                        </div>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                value={formData.attending}
               />
+            </div>
 
-              {form.watch("attending") && (
-                <>
-                  <FormField
-                    control={form.control}
-                    name="guestCount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="font-serif text-sm text-foreground">
-                          Number of Guests
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            min="1"
-                            max="10"
-                            onChange={(e) => field.onChange(parseInt(e.target.value))}
-                            className="border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
-                            data-testid="input-guest-count"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="dietaryRestrictions"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="font-serif text-sm text-foreground">
-                          Dietary Restrictions (Optional)
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            value={field.value || ""}
-                            className="border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
-                            data-testid="input-dietary"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </>
-              )}
-
-              <FormField
-                control={form.control}
-                name="message"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-serif text-sm text-foreground">
-                      Message to the Couple (Optional)
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        value={field.value || ""}
-                        rows={4}
-                        className="border border-border rounded-md bg-transparent font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors resize-none"
-                        data-testid="input-message"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+            <div className="space-y-2">
+              <label className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-serif text-sm text-foreground">
+                Number of Guests
+              </label>
+              <input
+                type="number"
+                name="guestCount"
+                min="1"
+                max="10"
+                value={formData.guestCount}
+                onChange={handleGuestCountChange}
+                className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
+                data-testid="input-guest-count"
               />
+            </div>
 
-              <Button
-                type="submit"
-                className="w-full font-serif text-base tracking-wide"
-                disabled={rsvpMutation.isPending}
-                data-testid="button-submit-rsvp"
-              >
-                {rsvpMutation.isPending ? "Submitting..." : "Submit RSVP"}
-              </Button>
-            </form>
-          </Form>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover-elevate active-elevate-2 bg-primary text-primary-foreground border border-primary-border min-h-9 px-4 py-2 w-full font-serif text-base tracking-wide transition-colors duration-200 hover:bg-[hsl(75_13%_35%)]"
+              data-testid="button-submit-rsvp"
+            >
+              Submit RSVP
+            </button>
+          </form>
         </div>
       </div>
     </section>
