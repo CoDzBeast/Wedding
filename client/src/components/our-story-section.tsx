@@ -21,6 +21,7 @@ export function OurStorySection() {
           <h2
             className="font-serif text-4xl sm:text-5xl text-center text-foreground mb-16 font-light tracking-wide"
             data-testid="text-our-story-title"
+            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
           >
             Our Story
           </h2>
