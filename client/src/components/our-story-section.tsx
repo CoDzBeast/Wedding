@@ -19,9 +19,8 @@ export function OurStorySection() {
           transition={{ duration: 0.8 }}
         >
           <h2
-            className="font-serif text-4xl sm:text-5xl text-center text-foreground mb-16 font-light tracking-wide"
+            className="font-script text-4xl sm:text-5xl text-center text-foreground mb-16 font-light tracking-wide"
             data-testid="text-our-story-title"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
           >
             Our Story
           </h2>

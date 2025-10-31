@@ -1,7 +1,7 @@
 import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
-import { createServer as createViteServer, createLogger } from "vite";
+import { createServer as createViteServer, createLogger, type LogOptions, type LogType } from "vite";
 import { type Server } from "http";
 import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
@@ -26,23 +26,33 @@ export async function setupVite(app: Express, server: Server) {
     allowedHosts: true as const,
   };
 
-  const vite = await createViteServer({
+  // Create a copy of the viteConfig and modify it for middleware use
+  const config = {
     ...viteConfig,
-    configFile: false,
+    configFile: false as const,
     customLogger: {
       ...viteLogger,
-      error: (msg, options) => {
+      error: (msg: string, options?: LogOptions) => {
         viteLogger.error(msg, options);
-        process.exit(1);
+        // Don't exit on error, just log it
+        // process.exit(1);
       },
     },
     server: serverOptions,
-    appType: "custom",
-  });
+    appType: "custom" as const,
+  };
+
+  const vite = await createViteServer(config);
 
   app.use(vite.middlewares);
+  
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
+
+    // Skip handling for API routes and other specific paths
+    if (url.startsWith('/api') || url.startsWith('/.well-known')) {
+      return next();
+    }
 
     try {
       const clientTemplate = path.resolve(
@@ -54,9 +64,10 @@ export async function setupVite(app: Express, server: Server) {
 
       // always reload the index.html file from disk incase it changes
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      // More robust replacement that handles different path formats
       template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`,
+        /src="\.\//g,
+        'src="/'
       );
       const page = await vite.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
@@ -68,7 +79,7 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "public");
+  const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
