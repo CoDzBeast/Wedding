@@ -3,8 +3,16 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
+// Get the repository name for GitHub Pages deployment
+const getBasePath = () => {
+  // For GitHub Pages, the base path should be /<repository-name>/
+  const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1];
+  // Default to '/Wedding/' if no repository name is detected
+  return repoName ? `/${repoName}/` : '/Wedding/';
+};
+
 export default defineConfig({
-  base: "/Wedding/",
+  base: getBasePath(),
   plugins: [
     react(),
     runtimeErrorOverlay(),
