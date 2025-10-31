@@ -78,17 +78,30 @@ app.use((req, res, next) => {
     try {
       const { networkInterfaces } = require('os');
       const nets = networkInterfaces();
+      let foundNetworkInterface = false;
+      
       for (const [name, net] of Object.entries(nets)) {
-        if (!name.startsWith('Loopback') && net) {
+        // Skip loopback interfaces
+        if (name.toLowerCase().includes('loopback')) continue;
+        
+        if (net) {
           for (const iface of net as Array<{internal: boolean, family: string, address: string}>) {
+            // Log IPv4 addresses that are not internal
             if (!iface.internal && iface.family === 'IPv4') {
               log(`Network access: http://${iface.address}:${port}`);
+              foundNetworkInterface = true;
             }
           }
         }
       }
+      
+      // If no external network interfaces found, show localhost
+      if (!foundNetworkInterface) {
+        log(`Local access: http://localhost:${port}`);
+      }
     } catch (e) {
       log('Could not determine network interfaces');
+      log(`Local access: http://localhost:${port}`);
     }
   });
 })();

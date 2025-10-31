@@ -13,7 +13,7 @@ const DividerA = () => (
   <div className="section-divider divider-a relative h-0 my-0">
     <div className="absolute top-0 left-0 -translate-y-1/2 -translate-x-1/2 opacity-60 rotate-45 transform origin-center">
       <img 
-        src="/4F84008B-85FE-4915-AA1C-55C2D45CF9AE.png"
+        src="/Wedding/4F84008B-85FE-4915-AA1C-55C2D45CF9AE.png"
         alt="Decorative border element"
         className="w-auto h-auto max-w-none"
         style={{
@@ -30,7 +30,7 @@ const DividerB = () => (
   <div className="section-divider divider-b relative h-0 my-0">
     <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 opacity-60 -rotate-45 transform origin-center">
       <img 
-        src="/4F84008B-85FE-4915-AA1C-55C2D45CF9AE.png"
+        src="/Wedding/4F84008B-85FE-4915-AA1C-55C2D45CF9AE.png"
         alt="Decorative border element"
         className="w-auto h-auto max-w-none"
         style={{
