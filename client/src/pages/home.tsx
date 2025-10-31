@@ -43,6 +43,17 @@ const DividerB = () => (
   </div>
 );
 
+// Footer component
+const Footer = () => (
+  <footer className="bg-primary text-primary-foreground py-8 text-center">
+    <p className="font-serif text-lg">
+      With love, Samantha & Zachary
+      <br />
+      <span className="text-sm">November 8, 2025</span>
+    </p>
+  </footer>
+);
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState("hero");
 
@@ -96,6 +107,7 @@ export default function Home() {
       <LocalStaysSection />
       <DividerB />
       <RsvpSection />
+      <Footer />
     </div>
   );
 }
