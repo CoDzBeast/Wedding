@@ -2,29 +2,18 @@ import { useRef } from "react";
 
 const hotels = [
   {
-    name: "Meadowood Napa Valley",
-    distance: "On-site",
-    description: "Our wedding venue · Luxury accommodations · Book early for best availability",
-    bookingUrl: "https://www.meadowood.com/",
+    name: "Hyatt Place Sacramento/Roseville",
+    distance: "9 miles from venue",
+    description: "Comfortable, modern hotel in Roseville near Sacramento · Easy access to shopping and freeways",
+    bookingUrl: "https://www.hyatt.com/hyatt-place/en-US/saczv-hyatt-place-sacramento-roseville/",
   },
   {
-    name: "Auberge du Soleil",
-    distance: "3 miles from venue",
-    description: "Hillside resort with vineyard views · Fine dining · Spa amenities",
-    bookingUrl: "https://aubergedusoleil.aubergeresorts.com/",
+    name: "Residence Inn by Marriott Rocklin Roseville",
+    distance: "9 miles from venue",
+    description: "Comfortable, all-suite lodging in Roseville / Rocklin · Spacious rooms with full kitchens, free breakfast & easy freeway access",
+    bookingUrl: "https://www.marriott.com/en-us/hotels/sacov-residence-inn-rocklin-roseville/overview/",
   },
-  {
-    name: "Harvest Inn",
-    distance: "2 miles from venue",
-    description: "Historic estate · Family-friendly · Complimentary breakfast",
-    bookingUrl: "https://www.harvestinn.com/",
-  },
-  {
-    name: "Hotel St. Helena",
-    distance: "4 miles from venue",
-    description: "Boutique hotel in downtown St. Helena · Walking distance to restaurants and shops",
-    bookingUrl: "https://www.hotelsthelena.com/",
-  },
+
 ];
 
 export function LocalStaysSection() {
