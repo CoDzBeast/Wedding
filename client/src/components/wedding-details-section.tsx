@@ -30,11 +30,11 @@ export function WeddingDetailsSection() {
                 4:00 PM
               </p>
               <p className="font-serif text-lg text-muted-foreground" data-testid="text-ceremony-address">
-                The Botanical Gardens
+                Creekside Meadows
                 <br />
-                123 Garden Lane
+                9496 Watt Ave
                 <br />
-                Sonoma, California
+                Roseville California
               </p>
               <a
                 href="https://maps.google.com/?q=The+Botanical+Gardens+Sonoma+CA"
@@ -75,11 +75,11 @@ export function WeddingDetailsSection() {
                 6:00 PM
               </p>
               <p className="font-serif text-lg text-muted-foreground" data-testid="text-reception-address">
-                The Garden Pavilion
+                Creekside Meadows
                 <br />
-                Same Location
+                9496 Watt Ave
                 <br />
-                Sonoma, California
+                Roseville, California
               </p>
               <a
                 href="https://maps.google.com/?q=The+Garden+Pavilion+Sonoma+CA"
