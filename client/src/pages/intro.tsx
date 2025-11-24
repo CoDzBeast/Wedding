@@ -18,7 +18,7 @@ const IntroPage: React.FC = () => {
     setIsExiting(true);
     // Extended animation time for smoother transition
     setTimeout(() => {
-      window.location.href = '/Wedding/home'; // Editable redirect path
+      window.location.href = '/home'; // Redirect to home page (without /Wedding prefix)
     }, 1000); // Longer duration for more elaborate exit animation
   };
 

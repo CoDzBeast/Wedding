@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -7,14 +7,20 @@ import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import IntroPage from "@/pages/intro";
 
-function Router() {
+function AppRouter() {
+  // For local development, use empty base path
+  // For production (GitHub Pages), use /Wedding base path
+  const isDev = import.meta.env.DEV;
+  const basePath = isDev ? '' : '/Wedding';
+  
   return (
-    <Switch>
-      <Route path="/" component={IntroPage} />
-      <Route path="/Wedding/home" component={Home} />
-      {/* For SPA routing, we want Home component to handle all routes */}
-      <Route path="/Wedding/:rest*" component={Home} />
-    </Switch>
+    <Router base={basePath}>
+      <Switch>
+        <Route path="/" component={IntroPage} />
+        <Route path="/home" component={Home} />
+        <Route path="/:rest*" component={NotFound} />
+      </Switch>
+    </Router>
   );
 }
 
@@ -23,7 +29,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router />
+        <AppRouter />
       </TooltipProvider>
     </QueryClientProvider>
   );
