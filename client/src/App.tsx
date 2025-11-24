@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
-import IntroPage from "@/pages/intro";
 
 function AppRouter() {
   // For local development, use empty base path
@@ -16,8 +15,7 @@ function AppRouter() {
   return (
     <Router base={basePath}>
       <Switch>
-        <Route path="/" component={IntroPage} />
-        <Route path="/home" component={Home} />
+        <Route path="/" component={Home} />
         <Route path="/:rest*" component={NotFound} />
       </Switch>
     </Router>
