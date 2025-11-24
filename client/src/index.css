@@ -268,13 +268,17 @@
     position: relative;
     height: 0;
     margin: 0;
+    /* Ensure decorative elements can render outside bounds */
+    overflow: visible;
   }
   
   /* Contain decorative elements within the viewport */
   .section-divider > div {
     position: absolute;
-    max-width: 200px; /* Limit decorative element size on mobile */
-    max-height: 200px;
+    max-width: 280px; /* Increased from 200px to match component size */
+    max-height: 280px; /* Increased from 200px to match component size */
+    /* Ensure decorative elements are above other content */
+    z-index: 10;
   }
   
   /* Prevent images from causing overflow while allowing decorative elements */
@@ -285,10 +289,12 @@
   
   /* Special handling for decorative border images */
   .section-divider img {
-    max-width: 200px; /* Limit size on mobile */
-    max-height: 200px;
+    max-width: 280px; /* Increased from 200px to match component size */
+    max-height: 280px; /* Increased from 200px to match component size */
     width: auto;
     height: auto;
+    /* Ensure images are above other content */
+    z-index: 10;
   }
   
   /* Ensure the root element is visible */
@@ -296,6 +302,7 @@
     width: 100%;
     min-height: 100vh;
     position: relative;
+    /* Reduced z-index to ensure decorative elements can be above */
     z-index: 1;
   }
 }
