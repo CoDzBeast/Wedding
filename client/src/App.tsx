@@ -5,11 +5,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
+import IntroPage from "@/pages/intro";
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={IntroPage} />
+      <Route path="/home" component={Home} />
       {/* For SPA routing, we want Home component to handle all routes */}
       <Route path="/:rest*" component={Home} />
     </Switch>

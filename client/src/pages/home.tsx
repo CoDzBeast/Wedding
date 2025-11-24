@@ -8,6 +8,9 @@ import { RegistrySection } from "@/components/registry-section";
 import { LocalStaysSection } from "@/components/local-stays-section";
 import { RsvpSection } from "@/components/rsvp-section";
 
+// Add entrance animation styles
+import "../styles/home.css";
+
 // Divider components with decorative floral elements
 const DividerA = () => (
   <div className="section-divider divider-a relative h-0 my-0">
@@ -56,8 +59,15 @@ const Footer = () => (
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("hero");
+  // Add state for entrance animation
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    // Trigger entrance animations after component mounts
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+
     const handleScroll = () => {
       const sections = [
         "hero",
@@ -89,11 +99,15 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
-    <div className="min-h-screen bg-background w-full max-w-full overflow-x-hidden relative">
+    // Add entrance animation class
+    <div className={`min-h-screen bg-background w-full max-w-full overflow-x-hidden relative ${isLoaded ? 'loaded' : ''}`}>
       <Navigation activeSection={activeSection} />
       <HeroSection />
       <OurStorySection />
