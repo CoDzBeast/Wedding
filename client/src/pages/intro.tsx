@@ -18,7 +18,12 @@ const IntroPage: React.FC = () => {
     setIsExiting(true);
     // Extended animation time for smoother transition
     setTimeout(() => {
-      window.location.href = '/home'; // Redirect to home page (without /Wedding prefix)
+      // For GitHub Pages, we need to include the base path
+      if (window.location.hostname.includes('github.io')) {
+        window.location.href = '/Wedding/home';
+      } else {
+        window.location.href = '/home'; // For local development
+      }
     }, 1000); // Longer duration for more elaborate exit animation
   };
 
