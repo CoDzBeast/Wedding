@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import heroImage from "@assets/generated_images/Cinematic_golden_hour_landscape_background_8a331fd2.png";
 
 export function HeroSection() {
-  const weddingDate = new Date("2025-11-08T16:00:00");
+  const weddingDate = new Date("2026-05-02T16:00:00");
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -111,9 +111,9 @@ export function HeroSection() {
           className="font-serif text-lg sm:text-xl md:text-2xl text-foreground font-semibold"
         >
           <p className="mb-2" data-testid="text-wedding-date">
-            November 8, 2025
+            May 2, 2026
           </p>
-          <p data-testid="text-wedding-location">Napa Valley, California</p>
+          <p data-testid="text-wedding-location">Roseville, California</p>
         </motion.div>
       </div>
     </section>

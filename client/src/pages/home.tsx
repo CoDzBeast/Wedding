@@ -52,7 +52,7 @@ const Footer = () => (
     <p className="font-serif text-lg">
       With love, Samantha & Zachary
       <br />
-      <span className="text-sm">November 8, 2025</span>
+      <span className="text-sm">May 2, 2026</span>
     </p>
   </footer>
 );

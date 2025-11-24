@@ -24,10 +24,10 @@ export function WeddingDetailsSection() {
             </h3>
             <div className="space-y-3">
               <p className="font-serif text-lg text-foreground" data-testid="text-ceremony-date">
-                Saturday, November 8, 2025
+                Saturday, May 2, 2026
               </p>
               <p className="font-serif text-lg text-foreground" data-testid="text-ceremony-time">
-                4:00 PM
+                3:00
               </p>
               <p className="font-serif text-lg text-muted-foreground" data-testid="text-ceremony-address">
                 Creekside Meadows
@@ -37,7 +37,7 @@ export function WeddingDetailsSection() {
                 Roseville California
               </p>
               <a
-                href="https://maps.google.com/?q=The+Botanical+Gardens+Sonoma+CA"
+                href="https://maps.google.com/?q=Creekside+Meadows+Roseville+CA"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 font-serif text-primary hover:text-primary/80 transition-colors border-b border-primary pb-1"
@@ -69,10 +69,10 @@ export function WeddingDetailsSection() {
             </h3>
             <div className="space-y-3">
               <p className="font-serif text-lg text-foreground" data-testid="text-reception-date">
-                Saturday, November 8, 2025
+                Saturday, May 2, 2026
               </p>
               <p className="font-serif text-lg text-foreground" data-testid="text-reception-time">
-                6:00 PM
+                4:30 PM
               </p>
               <p className="font-serif text-lg text-muted-foreground" data-testid="text-reception-address">
                 Creekside Meadows
@@ -82,7 +82,7 @@ export function WeddingDetailsSection() {
                 Roseville, California
               </p>
               <a
-                href="https://maps.google.com/?q=The+Garden+Pavilion+Sonoma+CA"
+                href="https://maps.google.com/?q=Creekside+Meadows+Roseville+CA"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 font-serif text-primary hover:text-primary/80 transition-colors border-b border-primary pb-1"

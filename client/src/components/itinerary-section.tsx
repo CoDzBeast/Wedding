@@ -1,13 +1,13 @@
 import { useRef } from "react";
 
 const timelineEvents = [
-  { time: "3:30 PM", title: "Guests Arrive", description: "Welcome reception with light refreshments" },
-  { time: "4:00 PM", title: "Ceremony Begins", description: "Join us as we exchange our vows" },
-  { time: "4:45 PM", title: "Cocktail Hour", description: "Champagne and hors d'oeuvres on the terrace" },
-  { time: "6:00 PM", title: "Reception & Dinner", description: "A celebration feast under the stars" },
-  { time: "8:00 PM", title: "First Dance", description: "The newlyweds take the floor" },
-  { time: "8:30 PM", title: "Dancing & Celebration", description: "Dance the night away with us" },
-  { time: "11:00 PM", title: "Sparkler Send-Off", description: "A magical farewell under the night sky" },
+  { time: "3:00", title: "Guests Arrive", description: "Welcome reception with light refreshments" },
+  { time: "3:30 PM", title: "Ceremony Begins", description: "Join us as we exchange our vows" },
+  { time: "4:00 PM", title: "Cocktail Hour", description: "Champagne and hors d'oeuvres on the terrace" },
+  { time: "5:00 PM", title: "Reception & Dinner", description: "A celebration feast under the stars" },
+  { time: "7:00 PM", title: "First Dance", description: "The newlyweds take the floor" },
+  { time: "7:30 PM", title: "Dancing & Celebration", description: "Dance the night away with us" },
+  { time: "9:30 PM", title: "Send-Off", description: "A magical farewell under the night sky" },
 ];
 
 export function ItinerarySection() {
