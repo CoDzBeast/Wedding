@@ -49,12 +49,12 @@ const IntroPage: React.FC = () => {
           aria-label="Open invitation"
         >
           <img 
-            src="/assets/landing/envelope.png" 
+            src="./assets/landing/envelope.png" 
             alt="Wedding invitation envelope" 
             className="intro-envelope-image"
           />
           <img 
-            src="/assets/landing/seal.png" 
+            src="./assets/landing/seal.png" 
             alt="Wax seal" 
             className="intro-seal-image"
           />
