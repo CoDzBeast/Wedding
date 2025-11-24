@@ -1,7 +1,7 @@
 import { useRef } from "react";
 
 const timelineEvents = [
-  { time: "3:00", title: "Guests Arrive", description: "Welcome reception with light refreshments" },
+  { time: "3:00 PM", title: "Guests Arrive", description: "Welcome reception with light refreshments" },
   { time: "3:30 PM", title: "Ceremony Begins", description: "Join us as we exchange our vows" },
   { time: "4:00 PM", title: "Cocktail Hour", description: "Champagne and hors d'oeuvres on the terrace" },
   { time: "5:00 PM", title: "Reception & Dinner", description: "A celebration feast under the stars" },
