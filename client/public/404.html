@@ -6,8 +6,8 @@
     <script>
       // Redirect to the index.html for SPA routing
       sessionStorage.setItem('redirectPath', location.pathname);
-      // Use the absolute path to support the base path
-      location.replace('/Wedding/');
+      // Use relative path for proper SPA routing
+      location.replace('./index.html');
     </script>
   </head>
   <body>
