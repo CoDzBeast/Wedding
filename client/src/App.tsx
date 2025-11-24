@@ -11,9 +11,9 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={IntroPage} />
-      <Route path="/home" component={Home} />
+      <Route path="/Wedding/home" component={Home} />
       {/* For SPA routing, we want Home component to handle all routes */}
-      <Route path="/:rest*" component={Home} />
+      <Route path="/Wedding/:rest*" component={Home} />
     </Switch>
   );
 }
