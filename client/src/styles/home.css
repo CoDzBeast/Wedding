@@ -542,3 +542,61 @@
     right: 25%;
   }
 }
+
+/* Show/hide logic for desktop/mobile views */
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+  
+  .mobile-only {
+    display: block;
+  }
+}
+
+/* Mobile grid layout for registry */
+.registry-mobile-grid {
+  margin-top: 40px;
+}
+
+.registry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 0 12px;
+}
+
+@media (max-width: 480px) {
+  .registry-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Pagination styling */
+.registry-mobile-pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  font-size: 16px;
+  align-items: center;
+}
+
+.registry-mobile-pagination button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #f3f3f3;
+  border: 1px solid #ddd;
+}
+
+.registry-mobile-pagination button:disabled {
+  opacity: 0.4;
+}

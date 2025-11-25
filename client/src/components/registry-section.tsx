@@ -1,10 +1,18 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import registryData from "../registry/registry.json";
 import RegistryCard from "./RegistryCard";
 
 export function RegistrySection() {
   const ref = useRef(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [mobilePage, setMobilePage] = useState(0);
+
+  const itemsPerPage = 9;
+  const totalPages = Math.ceil(registryData.length / itemsPerPage);
+
+  const start = mobilePage * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pagedItems = registryData.slice(start, end);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -41,7 +49,8 @@ export function RegistrySection() {
           locations.
         </p>
 
-        <div className="registry-carousel-wrapper">
+        {/* Desktop view wrapper (unchanged) */}
+        <div className="registry-carousel-wrapper desktop-only">
           <button className="registry-arrow left" onClick={scrollLeft}>‹</button>
 
           <div ref={scrollRef} className="registry-scroll-area">
@@ -57,6 +66,39 @@ export function RegistrySection() {
           </div>
 
           <button className="registry-arrow right" onClick={scrollRight}>›</button>
+        </div>
+
+        {/* Mobile view wrapper (NEW) */}
+        <div className="registry-mobile-grid mobile-only">
+          <div className="registry-grid">
+            {pagedItems.map((item, idx) => (
+              <RegistryCard
+                key={idx}
+                url={item.url}
+                image={item.image}
+                price={item.price}
+              />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <div className="registry-mobile-pagination">
+            <button 
+              disabled={mobilePage === 0}
+              onClick={() => setMobilePage(mobilePage - 1)}
+            >
+              Previous
+            </button>
+
+            <span>{mobilePage + 1} / {totalPages}</span>
+
+            <button 
+              disabled={mobilePage === totalPages - 1}
+              onClick={() => setMobilePage(mobilePage + 1)}
+            >
+              Next
+            </button>
+          </div>
         </div>
 
         {/* Venmo Subsection */}
