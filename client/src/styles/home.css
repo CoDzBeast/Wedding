@@ -175,6 +175,7 @@
   .content-with-borders {
     padding-left: 30px;
     padding-right: 30px;
+    opacity: 0.75; /* subtle fade for mobile */
   }
 }
 
@@ -198,5 +199,6 @@
   .content-with-borders {
     padding-left: 20px;
     padding-right: 20px;
+    opacity: 0.65; /* slightly more fade on very small screens */
   }
 }
