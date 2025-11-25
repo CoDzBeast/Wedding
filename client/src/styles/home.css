@@ -419,3 +419,126 @@
     background: rgba(255, 255, 255, 0.65); /* stronger fade for tiny screens */
   }
 }
+
+/* Mobile-specific improvements for registry section */
+@media (max-width: 600px) {
+  /* Constrain content width so it doesn't touch edges */
+  #registry .max-w-3xl {
+    max-width: 95%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Improve section spacing */
+  #registry {
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+
+  /* Reduce font sizes for better mobile readability */
+  #registry h2.font-script {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+
+  #registry p.font-sans {
+    font-size: 1rem;
+    margin-bottom: 24px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Adjust registry carousel for mobile */
+  .registry-scroll-area {
+    gap: 16px;
+    padding: 10px 0 60px 0; /* Extra bottom padding for arrows */
+  }
+
+  /* Constrain registry card width on mobile */
+  .registry-card {
+    width: 280px;
+    height: auto;
+    min-height: 400px;
+  }
+
+  /* Scale down product images on mobile */
+  .registry-img-wrapper {
+    max-width: 200px;
+    margin: 0 auto 16px auto;
+  }
+
+  /* Adjust registry card text */
+  .registry-name {
+    font-size: 0.9rem;
+    padding: 0 8px;
+    max-height: 3.6em;
+    line-height: 1.2em;
+  }
+
+  /* Adjust registry price */
+  .registry-price {
+    font-size: 1.1rem;
+    margin: 8px 0;
+  }
+
+  /* Mobile-friendly view button */
+  .view-btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    margin-top: 8px;
+  }
+
+  /* Improve Venmo section for mobile */
+  .registry-venmo-wrapper {
+    margin-top: 40px;
+  }
+
+  .registry-venmo-title {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+
+  .registry-venmo-subtitle {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .registry-venmo-grid {
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .registry-venmo-card {
+    width: 220px;
+    padding: 16px;
+  }
+
+  /* Scale down Venmo QR codes */
+  .registry-venmo-qr {
+    max-width: 140px;
+    margin: 0 auto;
+  }
+
+  .registry-venmo-username {
+    font-size: 0.9rem;
+    margin-top: 8px;
+  }
+
+  /* Adjust carousel arrows for mobile */
+  .registry-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+    bottom: -45px;
+    top: auto;
+    transform: none;
+  }
+
+  .registry-arrow.left {
+    left: 25%;
+  }
+
+  .registry-arrow.right {
+    right: 25%;
+  }
+}
