@@ -1,25 +1,22 @@
 import { useRef } from "react";
-
-const registries = [
-  {
-    name: "Williams Sonoma",
-    url: "https://www.williams-sonoma.com/registry/",
-    description: "For our kitchen and home essentials",
-  },
-  {
-    name: "Crate & Barrel",
-    url: "https://www.crateandbarrel.com/gift-registry/",
-    description: "Home furnishings and décor",
-  },
-  {
-    name: "Honeyfund",
-    url: "https://www.honeyfund.com/",
-    description: "Contributions to our honeymoon adventure",
-  },
-];
+import registryData from "../registry/registry.json";
+import RegistryCard from "./RegistryCard";
 
 export function RegistrySection() {
   const ref = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -350, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 350, behavior: "smooth" });
+    }
+  };
 
   return (
     <section
@@ -44,28 +41,48 @@ export function RegistrySection() {
           locations.
         </p>
 
-        <div className="space-y-8">
-          {registries.map((registry, index) => (
-            <div
-              key={index}
-              className="text-center"
-            >
-              <a
-                href={registry.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-block"
-                data-testid={`link-registry-${index}`}
-              >
-                <h3 className="font-serif text-2xl text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
-                  {registry.name}
-                </h3>
-                <p className="font-sans text-base text-muted-foreground">
-                  {registry.description}
-                </p>
-              </a>
+        <div className="registry-carousel-wrapper">
+          <button className="registry-arrow left" onClick={scrollLeft}>‹</button>
+
+          <div ref={scrollRef} className="registry-scroll-area">
+            {registryData.map((item, index) => (
+              <div className="registry-item" key={index}>
+                <RegistryCard
+                  url={item.url}
+                  image={item.image}
+                  price={item.price}
+                />
+              </div>
+            ))}
+          </div>
+
+          <button className="registry-arrow right" onClick={scrollRight}>›</button>
+        </div>
+
+        {/* Venmo Subsection */}
+        <div className="registry-venmo-wrapper">
+          <h2 className="registry-venmo-title">Gift Any Amount</h2>
+          <p className="registry-venmo-subtitle">Contribute to our Journey!</p>
+
+          <div className="registry-venmo-grid">
+            {/* Venmo QR */}
+            <div className="registry-venmo-card">
+              <img src="/assets/venmo-qr.png" alt="Venmo QR Code" className="registry-venmo-qr" />
+              <div className="registry-venmo-username">Zachary_McNear</div>
             </div>
-          ))}
+
+            {/* PayPal QR */}
+            <div className="registry-venmo-card">
+              <img src="/assets/paypal-qr.png" alt="PayPal QR Code" className="registry-venmo-qr" />
+              <div className="registry-venmo-username">@ZacharyMcNear</div>
+            </div>
+
+            {/* CashApp QR */}
+            <div className="registry-venmo-card">
+              <img src="/assets/cashapp-qr.png" alt="CashApp QR Code" className="registry-venmo-qr" />
+              <div className="registry-venmo-username">$zmcnear</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -150,6 +150,159 @@
   padding-right: 60px;
 }
 
+/* Registry Card Styles */
+.registry-card {
+  width: 320px;              /* match the original template width */
+  height: 480px;             /* match the original template height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.registry-card * {
+  flex-shrink: 0;
+}
+
+/* Registry Card Image Wrapper Styles */
+.registry-img-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* perfectly square container */
+  background: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Registry Card Image Styles */
+.registry-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* prevents stretching */
+  object-position: center;
+  display: block;
+}
+
+/* Registry Card Name Styles */
+.registry-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;         /* limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 4.5em;             /* ensures consistent card height */
+  line-height: 1.5em;
+}
+
+/* Registry Carousel Styles */
+.registry-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.registry-scroll-area {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 32px;             /* spacing between cards */
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.registry-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+.registry-item {
+  flex: 0 0 auto;       /* No stretching */
+  width: auto;          /* Respect card's natural width */
+  display: flex;
+}
+
+/* Arrows placed OUTSIDE the scroll area */
+.registry-arrow {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+
+.registry-arrow.left {
+  left: -55px;
+}
+
+.registry-arrow.right {
+  right: -55px;
+}
+
+/* Venmo Subsection Styles */
+.registry-venmo-wrapper {
+  margin-top: 60px;
+  text-align: center;
+}
+
+.registry-venmo-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.registry-venmo-subtitle {
+  font-size: 18px;
+  opacity: 0.75;
+  margin-bottom: 24px;
+}
+
+.registry-venmo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 30px auto 0 auto;
+}
+
+.registry-venmo-card {
+  margin: 0 auto;
+  padding: 20px;
+  width: 260px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.registry-venmo-qr {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.registry-venmo-username {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
 /* Responsive adjustments for decorative borders */
 @media (max-width: 768px) {
   .decorative-border {
@@ -171,9 +324,31 @@
   .border-top-spacing {
     /* Removed clip-path to prevent cutting off decorative borders */
   }
+  
+  /* Mobile adjustments for registry arrows */
+  .registry-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    bottom: -40px;
+    top: auto;
+    transform: none;
+  }
+
+  .registry-arrow.left {
+    left: 25%;
+  }
+
+  .registry-arrow.right {
+    right: 25%;
+  }
+  
+  .registry-venmo-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .bg-left-border,
   .bg-right-border {
     width: 24px; /* Further reduced width for mobile */
@@ -188,6 +363,28 @@
   /* Adjust clip path for smallest screens */
   .border-top-spacing {
     /* Removed clip-path to prevent cutting off decorative borders */
+  }
+  
+  /* Mobile adjustments */
+  .registry-item {
+    margin-right: 16px;
+  }
+  
+  .registry-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    bottom: -40px;
+    top: auto;
+    transform: none;
+  }
+
+  .registry-arrow.left {
+    left: 25%;
+  }
+
+  .registry-arrow.right {
+    right: 25%;
   }
 }
 

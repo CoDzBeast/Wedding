@@ -1,0 +1,12 @@
+PayPal and CashApp QR Code Placeholders
+
+This file serves as a reminder to add the actual PayPal and CashApp QR code images:
+
+1. Generate QR codes for your PayPal and CashApp accounts
+2. Save them as:
+   - paypal-qr.png
+   - cashapp-qr.png
+3. Place them in this same directory (client/public/assets/)
+4. Update the CashApp username in the registry-section.tsx component by replacing "$YourCashTag" with your actual CashApp tag
+
+These images should be sized appropriately for mobile and desktop viewing (recommended size: 200x200 pixels).
