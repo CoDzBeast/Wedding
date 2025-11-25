@@ -171,14 +171,6 @@
   .border-top-spacing {
     /* Removed clip-path to prevent cutting off decorative borders */
   }
-  
-  .content-with-borders {
-    background-color: rgba(255, 255, 255, 0.65); /* soft white veil */
-    background-blend-mode: lighten;
-    background-size: 150px auto, 150px auto; /* smaller border */
-    padding-left: 32px;
-    padding-right: 32px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -197,12 +189,36 @@
   .border-top-spacing {
     /* Removed clip-path to prevent cutting off decorative borders */
   }
-  
+}
+
+/* Mobile-only pseudo-element overlay for fading flowers without dimming text */
+@media (max-width: 768px) {
   .content-with-borders {
-    background-color: rgba(255, 255, 255, 0.75); /* soft white veil */
-    background-blend-mode: lighten;
-    background-size: 110px auto, 110px auto; /* even smaller for tiny screens */
-    padding-left: 20px;
-    padding-right: 20px;
+    position: relative;
+    background-size: 150px auto, 150px auto; /* scale down borders on mobile */
+  }
+
+  .content-with-borders::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.55); /* fade only the flowers */
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .content-with-borders > * {
+    position: relative;
+    z-index: 2; /* text stays above the fade */
+  }
+}
+
+@media (max-width: 480px) {
+  .content-with-borders {
+    background-size: 110px auto, 110px auto; /* smaller flowers for very small screens */
+  }
+
+  .content-with-borders::before {
+    background: rgba(255, 255, 255, 0.65); /* stronger fade for tiny screens */
   }
 }
