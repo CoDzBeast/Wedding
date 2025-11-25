@@ -173,9 +173,10 @@
   }
   
   .content-with-borders {
-    padding-left: 30px;
-    padding-right: 30px;
-    opacity: 0.55; /* perfect soft, elegant appearance for tablets */
+    background-size: 150px auto, 150px auto; /* smaller border */
+    padding-left: 32px;
+    padding-right: 32px;
+    opacity: 0.55; /* softens them */
   }
 }
 
@@ -197,8 +198,9 @@
   }
   
   .content-with-borders {
+    background-size: 110px auto, 110px auto; /* even smaller for tiny screens */
     padding-left: 20px;
     padding-right: 20px;
-    opacity: 0.45; /* perfect soft, elegant appearance for small mobile */
+    opacity: 0.45; /* keeps the design elegant and subtle */
   }
 }
