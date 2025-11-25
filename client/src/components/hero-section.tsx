@@ -35,7 +35,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative h-screen flex items-center justify-center overflow-hidden w-full max-w-full"
+      className="relative h-screen flex items-center justify-center overflow-visible w-full max-w-full"
     >
       <motion.div
         className="absolute inset-0"
@@ -43,7 +43,7 @@ export function HeroSection() {
         animate={{ scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background/60 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background/60 z-22" />
         <img
           src={heroImage}
           alt="Wedding venue"

@@ -23,7 +23,7 @@ export function LocalStaysSection() {
     <section
       id="local-stays"
       ref={ref}
-      className="py-24 sm:py-32 px-6 bg-background"
+      className="py-24 sm:py-32 px-6 overflow-visible"
     >
       <div className="max-w-3xl mx-auto">
         <h2
@@ -45,7 +45,7 @@ export function LocalStaysSection() {
           {hotels.map((hotel, index) => (
             <div
               key={index}
-              className="border-b border-border pb-12 last:border-b-0 last:pb-0"
+              className="border-b-2 border-border pb-12 last:border-b-0 last:pb-0"
               data-testid={`hotel-item-${index}`}
             >
               <div className="space-y-3">

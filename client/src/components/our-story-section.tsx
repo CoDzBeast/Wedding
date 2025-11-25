@@ -10,7 +10,7 @@ export function OurStorySection() {
     <section
       id="our-story"
       ref={ref}
-      className="py-24 sm:py-32 px-6 bg-background"
+      className="py-24 sm:py-32 px-6 overflow-visible"
     >
       <div className="max-w-3xl mx-auto">
         <motion.div
@@ -41,7 +41,7 @@ export function OurStorySection() {
             </motion.p>
 
             <div className="flex justify-center">
-              <div className="w-24 h-px bg-border" />
+              <div className="w-24 h-1 bg-border" />
             </div>
 
             {/* Paragraph 2 */}
@@ -59,7 +59,7 @@ export function OurStorySection() {
             </motion.p>
 
             <div className="flex justify-center">
-              <div className="w-24 h-px bg-border" />
+              <div className="w-24 h-1 bg-border" />
             </div>
 
             {/* Paragraph 3 */}
@@ -80,7 +80,7 @@ export function OurStorySection() {
             </motion.p>
 
             <div className="flex justify-center">
-              <div className="w-24 h-px bg-border" />
+              <div className="w-24 h-1 bg-border" />
             </div>
 
             {/* Paragraph 4 */}
@@ -100,7 +100,7 @@ export function OurStorySection() {
             </motion.p>
 
             <div className="flex justify-center">
-              <div className="w-24 h-px bg-border" />
+              <div className="w-24 h-1 bg-border" />
             </div>
 
             {/* Paragraph 5 */}
@@ -116,7 +116,7 @@ export function OurStorySection() {
             </motion.p>
 
             <div className="flex justify-center">
-              <div className="w-24 h-px bg-border" />
+              <div className="w-24 h-1 bg-border" />
             </div>
 
             {/* Paragraph 6 */}
@@ -132,7 +132,7 @@ export function OurStorySection() {
             </motion.p>
 
             <div className="flex justify-center">
-              <div className="w-24 h-px bg-border" />
+              <div className="w-24 h-1 bg-border" />
             </div>
 
             {/* Paragraph 7 */}

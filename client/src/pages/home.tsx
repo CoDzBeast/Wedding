@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Navigation } from "@/components/navigation";
 import { HeroSection } from "@/components/hero-section";
 import { OurStorySection } from "@/components/our-story-section";
@@ -11,62 +11,47 @@ import { RsvpSection } from "@/components/rsvp-section";
 // Add entrance animation styles
 import "../styles/home.css";
 
-// Divider components with decorative floral elements
-const DividerA = () => (
-  <div className="section-divider divider-a relative h-0 my-0">
-    <div className="absolute top-0 left-0 -translate-y-1/2 -translate-x-1/2 opacity-60 rotate-[55deg] transform origin-center">
-      <img 
-        src="/Wedding/4F84008B-85FE-4915-AA1C-55C2D45CF9AE.png"
-        alt="Decorative border element"
-        className="w-auto h-auto max-w-none"
-        style={{
-          display: 'block',
-          maxWidth: '280px',
-          maxHeight: '280px'
-        }}
-      />
-    </div>
-  </div>
-);
-
-const DividerB = () => (
-  <div className="section-divider divider-b relative h-0 my-0">
-    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 opacity-60 -rotate-45 transform origin-center">
-      <img 
-        src="/Wedding/4F84008B-85FE-4915-AA1C-55C2D45CF9AE.png"
-        alt="Decorative border element"
-        className="w-auto h-auto max-w-none"
-        style={{
-          display: 'block',
-          maxWidth: '280px',
-          maxHeight: '280px'
-        }}
-      />
-    </div>
-  </div>
-);
-
-// Footer component
+// Footer component with protective wrapper
 const Footer = () => (
-  <footer className="bg-primary text-primary-foreground py-8 text-center">
-    <p className="font-serif text-lg">
-      With love, Samantha & Zachary
-      <br />
-      <span className="text-sm">May 2, 2026</span>
-    </p>
-  </footer>
+  <div className="relative z-30" style={{ zIndex: 30 }}>
+    <footer className="bg-primary text-primary-foreground py-8 text-center relative">
+      <p className="font-serif text-lg">
+        With love, Samantha & Zachary
+        <br />
+        <span className="text-sm">May 2, 2026</span>
+      </p>
+    </footer>
+  </div>
 );
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("hero");
   // Add state for entrance animation
   const [isLoaded, setIsLoaded] = useState(false);
+  // Add state to track if user has interacted with invitation
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     // Trigger entrance animations after component mounts
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
+
+    // Function to enable scrolling after user interaction
+    const enableScrolling = () => {
+      if (!hasInteracted) {
+        setHasInteracted(true);
+        // Remove the event listeners after first interaction
+        document.removeEventListener('click', enableScrolling);
+        document.removeEventListener('keydown', enableScrolling);
+        document.removeEventListener('touchstart', enableScrolling);
+      }
+    };
+
+    // Add event listeners to detect user interaction
+    document.addEventListener('click', enableScrolling);
+    document.addEventListener('keydown', enableScrolling);
+    document.addEventListener('touchstart', enableScrolling);
 
     const handleScroll = () => {
       const sections = [
@@ -102,25 +87,26 @@ export default function Home() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(timer);
+      // Clean up event listeners
+      document.removeEventListener('click', enableScrolling);
+      document.removeEventListener('keydown', enableScrolling);
+      document.removeEventListener('touchstart', enableScrolling);
     };
-  }, []);
+  }, [hasInteracted]);
 
   return (
-    // Add entrance animation class
-    <div className={`min-h-screen bg-background w-full max-w-full overflow-x-hidden relative ${isLoaded ? 'loaded' : ''}`}>
+    // Add entrance animation class and conditional scrolling prevention
+    <div className={`min-h-screen bg-background w-full max-w-full overflow-x-visible relative ${isLoaded ? 'loaded' : ''} ${!hasInteracted ? 'no-scroll' : ''}`}>
       <Navigation activeSection={activeSection} />
       <HeroSection />
-      <OurStorySection />
-      <DividerB />
-      <WeddingDetailsSection />
-      <DividerA />
-      <ItinerarySection />
-      <DividerB />
-      <RegistrySection />
-      <DividerA />
-      <LocalStaysSection />
-      <DividerB />
-      <RsvpSection />
+      <div className="content-with-borders">
+        <OurStorySection />
+        <WeddingDetailsSection />
+        <ItinerarySection />
+        <RegistrySection />
+        <LocalStaysSection />
+        <RsvpSection />
+      </div>
       <Footer />
     </div>
   );

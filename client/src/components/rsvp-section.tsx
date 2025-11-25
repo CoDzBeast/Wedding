@@ -79,7 +79,7 @@ export function RsvpSection() {
       <section
         id="rsvp"
         ref={ref}
-        className="py-24 sm:py-32 px-6 bg-card"
+        className="py-24 sm:py-32 px-6 overflow-visible"
       >
         <div className="max-w-md mx-auto text-center">
           <div>
@@ -106,7 +106,7 @@ export function RsvpSection() {
     <section
       id="rsvp"
       ref={ref}
-      className="py-24 sm:py-32 px-6 bg-card"
+      className="py-24 sm:py-32 px-6 overflow-visible"
     >
       <div className="max-w-md mx-auto">
         <h2
@@ -136,7 +136,7 @@ export function RsvpSection() {
                   onChange={handleInputChange}
                   placeholder="First"
                   required
-                  className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
+                  className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b-2 border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
                   data-testid="input-first-name"
                 />
                 <input
@@ -145,7 +145,7 @@ export function RsvpSection() {
                   onChange={handleInputChange}
                   placeholder="Last"
                   required
-                  className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
+                  className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b-2 border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
                   data-testid="input-last-name"
                 />
               </div>
@@ -161,7 +161,7 @@ export function RsvpSection() {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
+                className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b-2 border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
                 data-testid="input-email"
               />
             </div>
@@ -234,7 +234,7 @@ export function RsvpSection() {
                 max="10"
                 value={formData.guestCount}
                 onChange={handleGuestCountChange}
-                className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
+                className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b-2 border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
                 data-testid="input-guest-count"
               />
             </div>

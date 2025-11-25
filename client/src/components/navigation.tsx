@@ -48,7 +48,7 @@ export function Navigation({ activeSection }: NavigationProps) {
           scrolled
             ? "bg-background/95 backdrop-blur-md shadow-sm"
             : "bg-transparent"
-        } w-full max-w-full overflow-x-hidden`}
+        } w-full max-w-full overflow-x-visible`}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 w-full">
           <div className="hidden md:flex items-center justify-center gap-8">

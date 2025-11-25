@@ -277,7 +277,7 @@
       
       /* No scroll class */
       body.no-scroll {
-        overflow: hidden;
+        overflow: visible;
       }
     </style>
     <script>
@@ -344,6 +344,9 @@
                 overlay.parentNode.removeChild(overlay);
               }
               document.body.classList.remove('no-scroll');
+              
+              // Dispatch a custom event to notify that overlay has been removed
+              window.dispatchEvent(new CustomEvent('overlayRemoved'));
             }, 600); // Match CSS transition duration
           });
           

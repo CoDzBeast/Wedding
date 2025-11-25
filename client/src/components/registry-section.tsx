@@ -25,7 +25,7 @@ export function RegistrySection() {
     <section
       id="registry"
       ref={ref}
-      className="py-24 sm:py-32 px-6 bg-card"
+      className="py-24 sm:py-32 px-6 overflow-visible"
     >
       <div className="max-w-3xl mx-auto">
         <h2

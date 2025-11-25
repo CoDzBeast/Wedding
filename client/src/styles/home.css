@@ -12,6 +12,16 @@
   transform: translateY(0);
 }
 
+/* Prevent scrolling until user interacts with invitation */
+.no-scroll {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
 /* Staggered entrance for main sections */
 #hero {
   transition-delay: 0.2s;
@@ -63,4 +73,130 @@
 .min-h-screen.loaded .navigation-container {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Decorative border images with larger scale and fewer repetitions */
+.decorative-border {
+  background-repeat: repeat-y;
+  background-size: 150% auto; /* Larger scale */
+  pointer-events: none;
+  z-index: 20; /* Above most content but below navigation */
+  /* Removed contain: strict to prevent cutting off borders */
+  opacity: 0.8; /* Slightly transparent to make less dominant */
+}
+
+.bg-left-border {
+  background-image: url('/assets/borders/bg-left.png');
+  background-position: left top;
+}
+
+.bg-right-border {
+  background-image: url('/assets/borders/bg-right.png');
+  background-position: right top;
+}
+
+/* Enhanced top spacing for decorative borders - creates strong visual separation from header/hero */
+.border-top-spacing::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px; /* Increased spacing for better separation */
+  background: linear-gradient(to bottom, 
+    rgba(255,255,255,1) 0%, 
+    rgba(255,255,255,0.95) 20%,
+    rgba(255,255,255,0.8) 40%,
+    rgba(255,255,255,0) 100%);
+  z-index: 21; /* Above decorative borders */
+}
+
+/* Enhanced bottom spacing for decorative borders - creates strong visual separation from footer */
+.border-bottom-spacing::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px; /* Increased spacing for better separation */
+  background: linear-gradient(to top, 
+    rgba(255,255,255,1) 0%, 
+    rgba(255,255,255,0.95) 20%,
+    rgba(255,255,255,0.8) 40%,
+    rgba(255,255,255,0) 100%);
+  z-index: 21; /* Above decorative borders */
+}
+
+/* Additional safety measure - clip decorative borders to avoid overlapping with hero/footer */
+.border-top-spacing {
+  /* Removed clip-path to prevent cutting off decorative borders */
+}
+
+/* Extra containment for hero section to ensure it stays above decorative elements */
+#hero {
+  position: relative;
+  z-index: 25; /* Ensure hero section stays above decorative borders */
+}
+
+/* New content wrapper with decorative borders */
+.content-with-borders {
+  position: relative;
+  background-image: url('/assets/borders/bg-left.png'), url('/assets/borders/bg-right.png');
+  background-repeat: repeat-y, repeat-y;
+  background-position: left top, right top;
+  background-size: 220px auto, 220px auto; /* scale up so it repeats fewer times */
+  overflow: visible;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+/* Responsive adjustments for decorative borders */
+@media (max-width: 768px) {
+  .decorative-border {
+    background-size: 120% auto; /* Maintain larger scale on tablets */
+  }
+  
+  .bg-left-border,
+  .bg-right-border {
+    width: 32px; /* Increased width for better visibility on tablets */
+  }
+  
+  /* Adjust spacing for smaller screens */
+  .border-top-spacing::before,
+  .border-bottom-spacing::after {
+    height: 150px; /* Reduced spacing for smaller screens */
+  }
+  
+  /* Adjust clip path for smaller screens */
+  .border-top-spacing {
+    /* Removed clip-path to prevent cutting off decorative borders */
+  }
+  
+  .content-with-borders {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bg-left-border,
+  .bg-right-border {
+    width: 24px; /* Further reduced width for mobile */
+  }
+  
+  /* Adjust spacing for smallest screens */
+  .border-top-spacing::before,
+  .border-bottom-spacing::after {
+    height: 120px; /* Further reduced spacing for mobile */
+  }
+  
+  /* Adjust clip path for smallest screens */
+  .border-top-spacing {
+    /* Removed clip-path to prevent cutting off decorative borders */
+  }
+  
+  .content-with-borders {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }

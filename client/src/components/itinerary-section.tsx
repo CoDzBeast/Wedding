@@ -17,7 +17,7 @@ export function ItinerarySection() {
     <section
       id="itinerary"
       ref={ref}
-      className="py-24 sm:py-32 px-6 bg-background"
+      className="py-24 sm:py-32 px-6 overflow-visible"
     >
       <div className="max-w-3xl mx-auto">
         <h2

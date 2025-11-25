@@ -7,7 +7,7 @@ export function WeddingDetailsSection() {
     <section
       id="wedding-details"
       ref={ref}
-      className="py-24 sm:py-32 px-6 bg-card w-full max-w-full overflow-hidden"
+      className="py-24 sm:py-32 px-6 w-full max-w-full overflow-visible"
     >
       <div className="max-w-5xl mx-auto">
         <h2
