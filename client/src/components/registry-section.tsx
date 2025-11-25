@@ -67,19 +67,19 @@ export function RegistrySection() {
           <div className="registry-venmo-grid">
             {/* Venmo QR */}
             <div className="registry-venmo-card">
-              <img src="/assets/venmo-qr.png" alt="Venmo QR Code" className="registry-venmo-qr" />
+              <img src="assets/venmo-qr.png" alt="Venmo QR Code" className="registry-venmo-qr" />
               <div className="registry-venmo-username">Zachary_McNear</div>
             </div>
 
             {/* PayPal QR */}
             <div className="registry-venmo-card">
-              <img src="/assets/paypal-qr.png" alt="PayPal QR Code" className="registry-venmo-qr" />
+              <img src="assets/paypal-qr.png" alt="PayPal QR Code" className="registry-venmo-qr" />
               <div className="registry-venmo-username">@ZacharyMcNear</div>
             </div>
 
             {/* CashApp QR */}
             <div className="registry-venmo-card">
-              <img src="/assets/cashapp-qr.png" alt="CashApp QR Code" className="registry-venmo-qr" />
+              <img src="assets/cashapp-qr.png" alt="CashApp QR Code" className="registry-venmo-qr" />
               <div className="registry-venmo-username">$zmcnear</div>
             </div>
           </div>
