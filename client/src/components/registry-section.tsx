@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import registryData from "../registry/registry.json";
 import RegistryCard from "./RegistryCard";
 
@@ -6,8 +6,23 @@ export function RegistrySection() {
   const ref = useRef(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [mobilePage, setMobilePage] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const itemsPerPage = 9;
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(typeof window !== "undefined" && window.innerWidth <= 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIsMobile);
+    };
+  }, []);
+
+  const itemsPerPage = 6;
   const totalPages = Math.ceil(registryData.length / itemsPerPage);
 
   const start = mobilePage * itemsPerPage;
@@ -50,27 +65,29 @@ export function RegistrySection() {
         </p>
 
         {/* Desktop view wrapper (unchanged) */}
-        <div className="registry-carousel-wrapper desktop-only">
-          <button className="registry-arrow left" onClick={scrollLeft}>‹</button>
+        <div className="desktop-only">
+          <div className="registry-carousel-wrapper">
+            <button className="registry-arrow left" onClick={scrollLeft}>‹</button>
 
-          <div ref={scrollRef} className="registry-scroll-area">
-            {registryData.map((item, index) => (
-              <div className="registry-item" key={index}>
-                <RegistryCard
-                  url={item.url}
-                  image={item.image}
-                  price={item.price}
-                />
-              </div>
-            ))}
+            <div ref={scrollRef} className="registry-scroll-area">
+              {registryData.map((item, index) => (
+                <div className="registry-item" key={index}>
+                  <RegistryCard
+                    url={item.url}
+                    image={item.image}
+                    price={item.price}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <button className="registry-arrow right" onClick={scrollRight}>›</button>
           </div>
-
-          <button className="registry-arrow right" onClick={scrollRight}>›</button>
         </div>
 
-        {/* Mobile view wrapper (NEW) */}
-        <div className="registry-mobile-grid mobile-only">
-          <div className="registry-grid">
+        {/* Mobile view wrapper */}
+        <div className="mobile-only">
+          <div className="registry-mobile-grid">
             {pagedItems.map((item, idx) => (
               <RegistryCard
                 key={idx}
@@ -81,24 +98,25 @@ export function RegistrySection() {
             ))}
           </div>
 
-          {/* Pagination */}
-          <div className="registry-mobile-pagination">
-            <button 
-              disabled={mobilePage === 0}
-              onClick={() => setMobilePage(mobilePage - 1)}
-            >
-              Previous
-            </button>
+          {totalPages > 1 && (
+            <div className="registry-mobile-pagination">
+              <button 
+                disabled={mobilePage === 0}
+                onClick={() => setMobilePage(mobilePage - 1)}
+              >
+                Previous
+              </button>
 
-            <span>{mobilePage + 1} / {totalPages}</span>
+              <span>{mobilePage + 1} / {totalPages}</span>
 
-            <button 
-              disabled={mobilePage === totalPages - 1}
-              onClick={() => setMobilePage(mobilePage + 1)}
-            >
-              Next
-            </button>
-          </div>
+              <button 
+                disabled={mobilePage === totalPages - 1}
+                onClick={() => setMobilePage(mobilePage + 1)}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Venmo Subsection */}

@@ -81,7 +81,6 @@
   background-size: 150% auto; /* Larger scale */
   pointer-events: none;
   z-index: 20; /* Above most content but below navigation */
-  /* Removed contain: strict to prevent cutting off borders */
   opacity: 0.8; /* Slightly transparent to make less dominant */
 }
 
@@ -564,36 +563,54 @@
 
 /* Mobile grid layout for registry */
 .registry-mobile-grid {
-  margin-top: 40px;
-}
-
-.registry-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* two columns */
   gap: 16px;
   padding: 0 12px;
 }
 
-@media (max-width: 480px) {
-  .registry-grid {
-    grid-template-columns: repeat(2, 1fr);
+/* SHRINK CARD SIZE ONLY ON MOBILE */
+@media (max-width: 768px) {
+  .registry-card {
+    width: 100%;        /* fill column */
+    height: auto;       /* allow slight shrinking */
+    padding: 12px;      /* smaller internal padding */
+  }
+
+  .registry-img-wrapper {
+    aspect-ratio: 1 / 1;
+    height: auto;
+    max-height: 150px;  /* shrink image box */
+  }
+
+  .registry-name {
+    font-size: 14px;
+    -webkit-line-clamp: 2; /* only 2 lines of title */
+  }
+
+  .registry-price {
+    font-size: 14px;
+  }
+
+  .view-btn {
+    font-size: 14px;
+    padding: 8px;
   }
 }
 
-/* Pagination styling */
+/* Pagination buttons */
 .registry-mobile-pagination {
-  margin-top: 20px;
+  margin-top: 16px;
   display: flex;
   justify-content: center;
   gap: 12px;
-  font-size: 16px;
   align-items: center;
 }
 
 .registry-mobile-pagination button {
-  padding: 8px 16px;
-  border-radius: 6px;
   background: #f3f3f3;
+  padding: 6px 12px;
+  border-radius: 8px;
   border: 1px solid #ddd;
 }
 
