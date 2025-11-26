@@ -564,37 +564,60 @@
 /* Mobile grid layout for registry */
 .registry-mobile-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* two columns */
-  gap: 16px;
-  padding: 0 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  padding: 16px;
 }
 
-/* SHRINK CARD SIZE ONLY ON MOBILE */
+/* Mobile card styling */
 @media (max-width: 768px) {
   .registry-card {
-    width: 100%;        /* fill column */
-    height: auto;       /* allow slight shrinking */
-    padding: 12px;      /* smaller internal padding */
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
   .registry-img-wrapper {
-    aspect-ratio: 1 / 1;
-    height: auto;
-    max-height: 150px;  /* shrink image box */
+    width: 100%;
+    aspect-ratio: 1/1;
+    max-width: 150px;
+    margin: 0 auto 8px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .registry-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   .registry-name {
     font-size: 14px;
-    -webkit-line-clamp: 2; /* only 2 lines of title */
+    font-weight: 500;
+    -webkit-line-clamp: 2;
+    line-height: 1.3em;
+    max-height: 2.6em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 6px 0;
   }
 
   .registry-price {
     font-size: 14px;
+    margin-bottom: 10px;
   }
 
   .view-btn {
     font-size: 14px;
-    padding: 8px;
+    padding: 6px 12px;
+    border-radius: 8px;
   }
 }
 

@@ -89,12 +89,13 @@ export function RegistrySection() {
         <div className="mobile-only">
           <div className="registry-mobile-grid">
             {pagedItems.map((item, idx) => (
-              <RegistryCard
-                key={idx}
-                url={item.url}
-                image={item.image}
-                price={item.price}
-              />
+              <div className="registry-card" key={idx}>
+                <RegistryCard
+                  url={item.url}
+                  image={item.image}
+                  price={item.price}
+                />
+              </div>
             ))}
           </div>
 
