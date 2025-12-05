@@ -85,12 +85,12 @@
 }
 
 .bg-left-border {
-  background-image: url('/assets/borders/bg-left.png');
+  background-image: url('../public/assets/borders/bg-left.png');
   background-position: left top;
 }
 
 .bg-right-border {
-  background-image: url('/assets/borders/bg-right.png');
+  background-image: url('../public/assets/borders/bg-right.png');
   background-position: right top;
 }
 
@@ -140,7 +140,7 @@
 /* New content wrapper with decorative borders */
 .content-with-borders {
   position: relative;
-  background-image: url('/assets/borders/bg-left.png'), url('/assets/borders/bg-right.png');
+  background-image: url('../public/assets/borders/bg-left.png'), url('../public/assets/borders/bg-right.png');
   background-repeat: repeat-y, repeat-y;
   background-position: left top, right top;
   background-size: 220px auto, 220px auto; /* scale up so it repeats fewer times */

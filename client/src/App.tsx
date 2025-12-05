@@ -8,9 +8,9 @@ import NotFound from "@/pages/not-found";
 
 function AppRouter() {
   // For local development, use empty base path
-  // For production (GitHub Pages), use /Wedding base path
+  // For production (custom domain), use root base path
   const isDev = import.meta.env.DEV;
-  const basePath = isDev ? '' : '/Wedding';
+  const basePath = isDev ? '' : '';
   
   return (
     <Router base={basePath}>
