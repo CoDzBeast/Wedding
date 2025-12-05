@@ -85,10 +85,10 @@ export function RegistrySection() {
           </div>
         </div>
 
-        {/* Mobile view wrapper - SHOW FIRST 6 ITEMS ONLY */}
+        {/* Mobile view wrapper - SHOW ALL ITEMS */}
         <div className="mobile-only">
           <div className="registry-mobile-grid">
-            {registryData.slice(0, 6).map((item, idx) => (
+            {registryData.map((item, idx) => (
               <div className="registry-card" key={idx}>
                 <RegistryCard
                   url={item.url}
