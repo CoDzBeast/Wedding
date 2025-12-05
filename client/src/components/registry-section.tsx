@@ -85,10 +85,10 @@ export function RegistrySection() {
           </div>
         </div>
 
-        {/* Mobile view wrapper */}
+        {/* Mobile view wrapper - SHOW FIRST 6 ITEMS ONLY */}
         <div className="mobile-only">
           <div className="registry-mobile-grid">
-            {pagedItems.map((item, idx) => (
+            {registryData.slice(0, 6).map((item, idx) => (
               <div className="registry-card" key={idx}>
                 <RegistryCard
                   url={item.url}
@@ -98,26 +98,6 @@ export function RegistrySection() {
               </div>
             ))}
           </div>
-
-          {totalPages > 1 && (
-            <div className="registry-mobile-pagination">
-              <button 
-                disabled={mobilePage === 0}
-                onClick={() => setMobilePage(mobilePage - 1)}
-              >
-                Previous
-              </button>
-
-              <span>{mobilePage + 1} / {totalPages}</span>
-
-              <button 
-                disabled={mobilePage === totalPages - 1}
-                onClick={() => setMobilePage(mobilePage + 1)}
-              >
-                Next
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Venmo Subsection */}

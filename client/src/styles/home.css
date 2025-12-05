@@ -417,6 +417,30 @@
   .content-with-borders::before {
     background: rgba(255, 255, 255, 0.65); /* stronger fade for tiny screens */
   }
+
+  /* Mobile fixes for registry section */
+  #registry {
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+
+  #registry .max-w-3xl {
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #registry .registry-mobile-grid {
+    max-width: 100%;
+    width: 100%;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
 }
 
 /* Mobile-specific improvements for registry section */
@@ -562,16 +586,22 @@
 }
 
 /* Mobile grid layout for registry */
-.registry-mobile-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-  padding: 16px;
-}
+@media (max-width: 480px) {
+  .registry-mobile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto;
+    gap: 0.75rem;
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    max-width: 100%;
+    overflow-x: hidden;
+    width: 100%;
+  }
 
-/* Mobile card styling */
-@media (max-width: 768px) {
-  .registry-card {
+  .mobile-only .registry-card {
     background: #ffffff;
     border-radius: 12px;
     padding: 12px;
@@ -580,25 +610,33 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    transform: none !important;
+    -webkit-transform: none !important;
   }
 
-  .registry-img-wrapper {
+  .mobile-only .registry-img-wrapper {
     width: 100%;
     aspect-ratio: 1/1;
-    max-width: 150px;
     margin: 0 auto 8px auto;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  .registry-img {
+  .mobile-only .registry-img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center;
+    max-width: 100%;
+    display: block;
   }
 
-  .registry-name {
+  .mobile-only .registry-name {
     font-size: 14px;
     font-weight: 500;
     -webkit-line-clamp: 2;
@@ -607,17 +645,22 @@
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 6px 0;
+    width: 100%;
   }
 
-  .registry-price {
+  .mobile-only .registry-price {
     font-size: 14px;
     margin-bottom: 10px;
   }
 
-  .view-btn {
+  .mobile-only .view-btn {
     font-size: 14px;
     padding: 6px 12px;
     border-radius: 8px;
+  }
+
+  .registry-mobile-pagination {
+    display: none;
   }
 }
 
