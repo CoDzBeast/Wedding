@@ -498,6 +498,45 @@
   .registry-mobile-pagination {
     display: none;
   }
+
+  /* Mobile QR Code Adjustments */
+  .registry-venmo-wrapper {
+    margin-top: 30px;
+  }
+
+  .registry-venmo-grid {
+    gap: 16px;
+    margin: 20px auto 0 auto;
+    padding: 0 10px;
+  }
+
+  .registry-venmo-card {
+    width: 80%;
+    max-width: 220px;
+    padding: 15px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .registry-venmo-qr {
+    width: 70%;
+    max-width: 140px;
+    height: auto;
+    border-radius: 10px;
+    margin: 0 auto;
+  }
+
+  .registry-venmo-username {
+    margin-top: 8px;
+    font-size: 13px;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 /* Mobile-specific improvements for registry section */
