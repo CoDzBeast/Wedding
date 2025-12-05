@@ -1,0 +1,642 @@
+/* Home Page Entrance Animation */
+.min-h-screen {
+  /* Initial state for entrance animation */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.min-h-screen.loaded {
+  /* Final state for entrance animation */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Prevent scrolling until user interacts with invitation */
+.no-scroll {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+/* Staggered entrance for main sections */
+#hero {
+  transition-delay: 0.2s;
+}
+
+#our-story {
+  transition-delay: 0.4s;
+}
+
+#wedding-details {
+  transition-delay: 0.6s;
+}
+
+#itinerary {
+  transition-delay: 0.8s;
+}
+
+#registry {
+  transition-delay: 1.0s;
+}
+
+#local-stays {
+  transition-delay: 1.2s;
+}
+
+#rsvp {
+  transition-delay: 1.4s;
+}
+
+/* Ensure all sections inherit the entrance animation */
+.min-h-screen.loaded #hero,
+.min-h-screen.loaded #our-story,
+.min-h-screen.loaded #wedding-details,
+.min-h-screen.loaded #itinerary,
+.min-h-screen.loaded #registry,
+.min-h-screen.loaded #local-stays,
+.min-h-screen.loaded #rsvp {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Navigation entrance animation */
+.navigation-container {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.min-h-screen.loaded .navigation-container {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Decorative border images with larger scale and fewer repetitions */
+.decorative-border {
+  background-repeat: repeat-y;
+  background-size: 150% auto; /* Larger scale */
+  pointer-events: none;
+  z-index: 20; /* Above most content but below navigation */
+  opacity: 0.8; /* Slightly transparent to make less dominant */
+}
+
+.bg-left-border {
+  background-image: url('/assets/borders/bg-left.png');
+  background-position: left top;
+}
+
+.bg-right-border {
+  background-image: url('/assets/borders/bg-right.png');
+  background-position: right top;
+}
+
+/* Enhanced top spacing for decorative borders - creates strong visual separation from header/hero */
+.border-top-spacing::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px; /* Increased spacing for better separation */
+  background: linear-gradient(to bottom, 
+    rgba(255,255,255,1) 0%, 
+    rgba(255,255,255,0.95) 20%,
+    rgba(255,255,255,0.8) 40%,
+    rgba(255,255,255,0) 100%);
+  z-index: 21; /* Above decorative borders */
+}
+
+/* Enhanced bottom spacing for decorative borders - creates strong visual separation from footer */
+.border-bottom-spacing::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px; /* Increased spacing for better separation */
+  background: linear-gradient(to top, 
+    rgba(255,255,255,1) 0%, 
+    rgba(255,255,255,0.95) 20%,
+    rgba(255,255,255,0.8) 40%,
+    rgba(255,255,255,0) 100%);
+  z-index: 21; /* Above decorative borders */
+}
+
+/* Additional safety measure - clip decorative borders to avoid overlapping with hero/footer */
+.border-top-spacing {
+  /* Removed clip-path to prevent cutting off decorative borders */
+}
+
+/* Extra containment for hero section to ensure it stays above decorative elements */
+#hero {
+  position: relative;
+  z-index: 25; /* Ensure hero section stays above decorative borders */
+}
+
+/* New content wrapper with decorative borders */
+.content-with-borders {
+  position: relative;
+  background-image: url('/assets/borders/bg-left.png'), url('/assets/borders/bg-right.png');
+  background-repeat: repeat-y, repeat-y;
+  background-position: left top, right top;
+  background-size: 220px auto, 220px auto; /* scale up so it repeats fewer times */
+  overflow: visible;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+/* Registry Card Styles */
+.registry-card {
+  width: 320px;              /* match the original template width */
+  height: 480px;             /* match the original template height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.registry-card * {
+  flex-shrink: 0;
+}
+
+/* Registry Card Image Wrapper Styles */
+.registry-img-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* perfectly square container */
+  background: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Registry Card Image Styles */
+.registry-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* prevents stretching */
+  object-position: center;
+  display: block;
+}
+
+/* Registry Card Name Styles */
+.registry-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;         /* limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 4.5em;             /* ensures consistent card height */
+  line-height: 1.5em;
+}
+
+/* Registry Carousel Styles */
+.registry-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.registry-scroll-area {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 32px;             /* spacing between cards */
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.registry-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+.registry-item {
+  flex: 0 0 auto;       /* No stretching */
+  width: auto;          /* Respect card's natural width */
+  display: flex;
+}
+
+/* Arrows placed OUTSIDE the scroll area */
+.registry-arrow {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+
+.registry-arrow.left {
+  left: -55px;
+}
+
+.registry-arrow.right {
+  right: -55px;
+}
+
+/* Venmo Subsection Styles */
+.registry-venmo-wrapper {
+  margin-top: 60px;
+  text-align: center;
+}
+
+.registry-venmo-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.registry-venmo-subtitle {
+  font-size: 18px;
+  opacity: 0.75;
+  margin-bottom: 24px;
+}
+
+.registry-venmo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 30px auto 0 auto;
+}
+
+.registry-venmo-card {
+  margin: 0 auto;
+  padding: 20px;
+  width: 260px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.registry-venmo-qr {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.registry-venmo-username {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+/* Responsive adjustments for decorative borders */
+@media (max-width: 768px) {
+  .decorative-border {
+    background-size: 120% auto; /* Maintain larger scale on tablets */
+  }
+  
+  .bg-left-border,
+  .bg-right-border {
+    width: 32px; /* Increased width for better visibility on tablets */
+  }
+  
+  /* Adjust spacing for smaller screens */
+  .border-top-spacing::before,
+  .border-bottom-spacing::after {
+    height: 150px; /* Reduced spacing for smaller screens */
+  }
+  
+  /* Adjust clip path for smaller screens */
+  .border-top-spacing {
+    /* Removed clip-path to prevent cutting off decorative borders */
+  }
+  
+  /* Mobile adjustments for registry arrows */
+  .registry-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    bottom: -40px;
+    top: auto;
+    transform: none;
+  }
+
+  .registry-arrow.left {
+    left: 25%;
+  }
+
+  .registry-arrow.right {
+    right: 25%;
+  }
+  
+  .registry-venmo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .bg-left-border,
+  .bg-right-border {
+    width: 24px; /* Further reduced width for mobile */
+  }
+  
+  /* Adjust spacing for smallest screens */
+  .border-top-spacing::before,
+  .border-bottom-spacing::after {
+    height: 120px; /* Further reduced spacing for mobile */
+  }
+  
+  /* Adjust clip path for smallest screens */
+  .border-top-spacing {
+    /* Removed clip-path to prevent cutting off decorative borders */
+  }
+  
+  /* Mobile adjustments */
+  .registry-item {
+    margin-right: 16px;
+  }
+  
+  .registry-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    bottom: -40px;
+    top: auto;
+    transform: none;
+  }
+
+  .registry-arrow.left {
+    left: 25%;
+  }
+
+  .registry-arrow.right {
+    right: 25%;
+  }
+}
+
+/* Mobile-only pseudo-element overlay for fading flowers without dimming text */
+@media (max-width: 768px) {
+  .content-with-borders {
+    position: relative;
+    background-size: 150px auto, 150px auto; /* scale down borders on mobile */
+  }
+
+  .content-with-borders::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.55); /* fade only the flowers */
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .content-with-borders > * {
+    position: relative;
+    z-index: 2; /* text stays above the fade */
+  }
+}
+
+@media (max-width: 480px) {
+  .content-with-borders {
+    background-size: 110px auto, 110px auto; /* smaller flowers for very small screens */
+  }
+
+  .content-with-borders::before {
+    background: rgba(255, 255, 255, 0.65); /* stronger fade for tiny screens */
+  }
+}
+
+/* Mobile-specific improvements for registry section */
+@media (max-width: 600px) {
+  /* Constrain content width so it doesn't touch edges */
+  #registry .max-w-3xl {
+    max-width: 95%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Improve section spacing */
+  #registry {
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+
+  /* Reduce font sizes for better mobile readability */
+  #registry h2.font-script {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+
+  #registry p.font-sans {
+    font-size: 1rem;
+    margin-bottom: 24px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Adjust registry carousel for mobile */
+  .registry-scroll-area {
+    gap: 16px;
+    padding: 10px 0 60px 0; /* Extra bottom padding for arrows */
+  }
+
+  /* Constrain registry card width on mobile */
+  .registry-card {
+    width: 280px;
+    height: auto;
+    min-height: 400px;
+  }
+
+  /* Scale down product images on mobile */
+  .registry-img-wrapper {
+    max-width: 200px;
+    margin: 0 auto 16px auto;
+  }
+
+  /* Adjust registry card text */
+  .registry-name {
+    font-size: 0.9rem;
+    padding: 0 8px;
+    max-height: 3.6em;
+    line-height: 1.2em;
+  }
+
+  /* Adjust registry price */
+  .registry-price {
+    font-size: 1.1rem;
+    margin: 8px 0;
+  }
+
+  /* Mobile-friendly view button */
+  .view-btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    margin-top: 8px;
+  }
+
+  /* Improve Venmo section for mobile */
+  .registry-venmo-wrapper {
+    margin-top: 40px;
+  }
+
+  .registry-venmo-title {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+
+  .registry-venmo-subtitle {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .registry-venmo-grid {
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .registry-venmo-card {
+    width: 220px;
+    padding: 16px;
+  }
+
+  /* Scale down Venmo QR codes */
+  .registry-venmo-qr {
+    max-width: 140px;
+    margin: 0 auto;
+  }
+
+  .registry-venmo-username {
+    font-size: 0.9rem;
+    margin-top: 8px;
+  }
+
+  /* Adjust carousel arrows for mobile */
+  .registry-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+    bottom: -45px;
+    top: auto;
+    transform: none;
+  }
+
+  .registry-arrow.left {
+    left: 25%;
+  }
+
+  .registry-arrow.right {
+    right: 25%;
+  }
+}
+
+/* Show/hide logic for desktop/mobile views */
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+  
+  .mobile-only {
+    display: block;
+  }
+}
+
+/* Mobile grid layout for registry */
+.registry-mobile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  padding: 16px;
+}
+
+/* Mobile card styling */
+@media (max-width: 768px) {
+  .registry-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .registry-img-wrapper {
+    width: 100%;
+    aspect-ratio: 1/1;
+    max-width: 150px;
+    margin: 0 auto 8px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .registry-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .registry-name {
+    font-size: 14px;
+    font-weight: 500;
+    -webkit-line-clamp: 2;
+    line-height: 1.3em;
+    max-height: 2.6em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 6px 0;
+  }
+
+  .registry-price {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .view-btn {
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+}
+
+/* Pagination buttons */
+.registry-mobile-pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  align-items: center;
+}
+
+.registry-mobile-pagination button {
+  background: #f3f3f3;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.registry-mobile-pagination button:disabled {
+  opacity: 0.4;
+}

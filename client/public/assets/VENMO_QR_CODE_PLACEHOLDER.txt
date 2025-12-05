@@ -1,0 +1,10 @@
+Venmo QR Code Placeholder
+
+This is a placeholder note for the Venmo QR code image.
+To implement this feature:
+
+1. Generate a QR code for your Venmo account
+2. Save it as "venmo-qr.png" in this directory
+3. Replace "@YourVenmoName" in the registry-section.tsx component with your actual Venmo handle
+
+The image should be sized appropriately for mobile and desktop viewing (recommended size: 200x200 pixels).
