@@ -27,18 +27,8 @@ export function Navigation({ activeSection }: NavigationProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = sectionId === "hero" ? 0 : 80;
-      const elementPosition = element.offsetTop - offset;
-
-      window.scrollTo({
-        top: elementPosition,
-        behavior: "smooth",
-      });
-      setMobileMenuOpen(false);
-    }
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -53,9 +43,10 @@ export function Navigation({ activeSection }: NavigationProps) {
         <div className="max-w-7xl mx-auto px-6 py-4 w-full">
           <div className="hidden md:flex items-center justify-center gap-8">
             {navLinks.map((link) => (
-              <button
+              <a
                 key={link.id}
-                onClick={() => scrollToSection(link.id)}
+                href={`#${link.id}`}
+                onClick={closeMobileMenu}
                 data-testid={`link-${link.id}`}
                 className={`font-serif text-sm tracking-wide transition-all duration-300 relative ${
                   activeSection === link.id
@@ -67,18 +58,19 @@ export function Navigation({ activeSection }: NavigationProps) {
                 {activeSection === link.id && (
                   <span className="absolute -bottom-1 left-0 right-0 h-px bg-primary transition-all duration-300" />
                 )}
-              </button>
+              </a>
             ))}
           </div>
 
           <div className="md:hidden flex items-center justify-between">
-            <button
-              onClick={() => scrollToSection("hero")}
+            <a
+              href="#hero"
+              onClick={closeMobileMenu}
               className="font-script text-2xl text-foreground"
               data-testid="link-home-mobile"
             >
               S & Z
-            </button>
+            </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-foreground p-2"
@@ -115,13 +107,14 @@ export function Navigation({ activeSection }: NavigationProps) {
         <div className="fixed inset-0 z-40 md:hidden overflow-hidden">
           <div
             className="absolute inset-0 bg-background/95 backdrop-blur-md"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={closeMobileMenu}
           />
           <div className="relative h-full flex flex-col items-center justify-center gap-6">
             {navLinks.map((link) => (
-              <button
+              <a
                 key={link.id}
-                onClick={() => scrollToSection(link.id)}
+                href={`#${link.id}`}
+                onClick={closeMobileMenu}
                 data-testid={`link-${link.id}-mobile`}
                 className={`font-serif text-xl tracking-wide transition-all duration-300 ${
                   activeSection === link.id
@@ -130,7 +123,7 @@ export function Navigation({ activeSection }: NavigationProps) {
                 }`}
               >
                 {link.label}
-              </button>
+              </a>
             ))}
           </div>
         </div>

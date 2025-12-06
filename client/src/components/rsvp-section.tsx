@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export function RsvpSection() {
   const ref = useRef(null);
@@ -10,6 +10,46 @@ export function RsvpSection() {
     attending: "Joyfully accepts",
     guestCount: 1,
   });
+
+  // Effect to handle guest count input behavior
+  useEffect(() => {
+    const guestInput = document.querySelector('input[name="guestCount"]') as HTMLInputElement | null;
+    
+    if (guestInput) {
+      const handleInput = () => {
+        // Allow empty strings while user is editing
+        if (guestInput.value === "") return;
+
+        // Prevent values below 1
+        if (parseInt(guestInput.value) < 1) {
+          guestInput.value = "";
+        }
+      };
+
+      const handleBlur = () => {
+        // Reset to 1 if left empty or invalid
+        const num = parseInt(guestInput.value);
+        if (isNaN(num) || num < 1) {
+          guestInput.value = "1";
+          // Update the formData state as well
+          setFormData(prev => ({ ...prev, guestCount: 1 }));
+        } else if (num > 10) {
+          guestInput.value = "10";
+          setFormData(prev => ({ ...prev, guestCount: 10 }));
+        } else {
+          setFormData(prev => ({ ...prev, guestCount: num }));
+        }
+      };
+
+      guestInput.addEventListener('input', handleInput);
+      guestInput.addEventListener('blur', handleBlur);
+
+      return () => {
+        guestInput.removeEventListener('input', handleInput);
+        guestInput.removeEventListener('blur', handleBlur);
+      };
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,22 +67,34 @@ export function RsvpSection() {
   };
 
   const handleGuestCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      guestCount: parseInt(e.target.value) || 1
-    }));
+    const value = e.target.value;
+    // For the React state, we want to handle the value properly
+    // If the value is empty or not a valid number, we'll keep it as an empty string in the input
+    // but maintain the previous valid number in state
+    if (value === "" || isNaN(parseInt(value))) {
+      // Don't update the state, just let the input be empty
+      // The state will retain the last valid number
+    } else {
+      const numValue = parseInt(value);
+      if (numValue >= 1 && numValue <= 10) {
+        setFormData(prev => ({ ...prev, guestCount: numValue }));
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Ensure guestCount is a valid number before submitting
+    const guestCountValue = Math.max(1, Math.min(10, formData.guestCount));
+
     // Create form data for Jotform submission
     const jotformData = new FormData();
     jotformData.append("q3_name[first]", formData.firstName);
     jotformData.append("q3_name[last]", formData.lastName);
     jotformData.append("q4_email", formData.email);
     jotformData.append("q5_willYou", formData.attending);
-    jotformData.append("q6_numberOf", formData.guestCount.toString());
+    jotformData.append("q6_numberOf", guestCountValue.toString());
     
     try {
       const response = await fetch("https://submit.jotform.com/submit/253035511518046", {

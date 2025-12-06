@@ -1,4 +1,9 @@
 /* Home Page Entrance Animation */
+html {
+  scroll-padding-top: 80px;
+  scroll-behavior: smooth;
+}
+
 .min-h-screen {
   /* Initial state for entrance animation */
   opacity: 0;
