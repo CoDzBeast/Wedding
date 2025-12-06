@@ -280,7 +280,8 @@ export function RsvpSection() {
                 Number of Guests
               </label>
               <input
-                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 name="guestCount"
                 min="1"
                 max="10"

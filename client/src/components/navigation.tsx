@@ -104,22 +104,22 @@ export function Navigation({ activeSection }: NavigationProps) {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden overflow-hidden">
+        <div className="fixed inset-0 z-50 md:hidden overflow-hidden">
           <div
             className="absolute inset-0 bg-background/95 backdrop-blur-md"
             onClick={closeMobileMenu}
           />
-          <div className="relative h-full flex flex-col items-center justify-center gap-6">
+          <div className="relative h-full flex flex-col items-center justify-center gap-6 z-50">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={`#${link.id}`}
                 onClick={closeMobileMenu}
                 data-testid={`link-${link.id}-mobile`}
-                className={`font-serif text-xl tracking-wide transition-all duration-300 ${
+                className={`font-serif text-2xl tracking-wide transition-all duration-300 ${
                   activeSection === link.id
                     ? "text-foreground font-medium"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {link.label}
