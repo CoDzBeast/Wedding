@@ -33,14 +33,10 @@ export function Navigation({ activeSection }: NavigationProps) {
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 navigation-container ${
-          scrolled
-            ? "bg-background/95 backdrop-blur-md shadow-sm"
-            : "bg-transparent"
-        } w-full max-w-full overflow-x-visible`}
-      >
+      {/* Main header - scrolls normally with page */}
+      <header className="relative w-full max-w-full overflow-x-visible">
         <div className="max-w-7xl mx-auto px-6 py-4 w-full">
+          {/* Desktop navigation - remains in header */}
           <div className="hidden md:flex items-center justify-center gap-8">
             {navLinks.map((link) => (
               <a
@@ -62,6 +58,7 @@ export function Navigation({ activeSection }: NavigationProps) {
             ))}
           </div>
 
+          {/* Mobile header content - logo only, scrolls with page */}
           <div className="md:hidden flex items-center justify-between">
             <a
               href="#hero"
@@ -71,38 +68,45 @@ export function Navigation({ activeSection }: NavigationProps) {
             >
               S & Z
             </a>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-foreground p-2"
-              data-testid="button-menu-toggle"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                {mobileMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
           </div>
         </div>
-      </nav>
+      </header>
 
+      {/* Sticky mobile menu button - always visible */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50">
+        <div className="flex justify-end px-6 py-4 bg-background/95 backdrop-blur-md shadow-sm">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-foreground p-2"
+            data-testid="button-menu-toggle"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {mobileMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu dropdown - positioned relative to viewport */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[9999] md:hidden mobile-menu-overlay">
           {/* Backdrop with click handler to close menu */}
@@ -111,7 +115,7 @@ export function Navigation({ activeSection }: NavigationProps) {
             onClick={closeMobileMenu}
           />
           {/* Menu content - positioned absolutely to appear above backdrop */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 z-[10000] mobile-menu-content">
+          <div className="absolute inset-0 flex flex-col items-center justify-start pt-20 gap-6 z-[10000] mobile-menu-content">
             {navLinks.map((link) => (
               <a
                 key={link.id}
