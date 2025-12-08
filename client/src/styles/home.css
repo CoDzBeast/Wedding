@@ -33,18 +33,6 @@ html {
     /* Remove position fixed to prevent stacking context issues */
     position: static;
   }
-  
-  /* Ensure mobile menu is visible above all content */
-  .mobile-menu-overlay {
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 9999 !important;
-  }
-  
-  .mobile-menu-content {
-    position: absolute !important;
-    z-index: 10000 !important;
-  }
 }
 
 /* Staggered entrance for main sections */
@@ -690,15 +678,4 @@ html {
 
 .registry-mobile-pagination button:disabled {
   opacity: 0.4;
-}
-
-/* Ensure mobile menu is always visible */
-.mobile-menu-overlay,
-.mobile-menu-content {
-  position: fixed !important;
-}
-
-/* Fix for mobile menu visibility */
-.mobile-menu-overlay {
-  overflow: visible !important;
 }

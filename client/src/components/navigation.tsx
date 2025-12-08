@@ -73,12 +73,13 @@ export function Navigation({ activeSection }: NavigationProps) {
       </header>
 
       {/* Sticky mobile menu button - always visible */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50">
+      <div className="md:hidden fixed top-0 right-0 z-[9999]">
         <div className="flex justify-end px-6 py-4 bg-background/95 backdrop-blur-md shadow-sm">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="text-foreground p-2"
             data-testid="button-menu-toggle"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             <svg
               className="w-6 h-6"
@@ -108,14 +109,14 @@ export function Navigation({ activeSection }: NavigationProps) {
 
       {/* Mobile menu dropdown - positioned relative to viewport */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[9999] md:hidden mobile-menu-overlay">
+        <div className="fixed inset-0 z-[9998] md:hidden">
           {/* Backdrop with click handler to close menu */}
           <div
             className="absolute inset-0 bg-background/80 backdrop-blur-sm"
             onClick={closeMobileMenu}
           />
           {/* Menu content - positioned absolutely to appear above backdrop */}
-          <div className="absolute inset-0 flex flex-col items-center justify-start pt-20 gap-6 z-[10000] mobile-menu-content">
+          <div className="absolute inset-0 flex flex-col items-center justify-start pt-20 gap-6 z-[9999]">
             {navLinks.map((link) => (
               <a
                 key={link.id}
