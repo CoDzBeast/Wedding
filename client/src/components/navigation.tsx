@@ -104,12 +104,12 @@ export function Navigation({ activeSection }: NavigationProps) {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden overflow-hidden">
+        <div className="fixed inset-0 z-[9999] md:hidden overflow-hidden mobile-menu-overlay">
           <div
             className="absolute inset-0 bg-background/95 backdrop-blur-md"
             onClick={closeMobileMenu}
           />
-          <div className="relative h-full flex flex-col items-center justify-center gap-6 z-50">
+          <div className="relative h-full flex flex-col items-center justify-center gap-6 z-[10000] mobile-menu-content">
             {navLinks.map((link) => (
               <a
                 key={link.id}

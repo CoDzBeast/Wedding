@@ -27,6 +27,26 @@ html {
   overflow: hidden;
 }
 
+/* Mobile menu fix - ensure it appears above all other elements */
+@media (max-width: 768px) {
+  .no-scroll {
+    /* Remove position fixed to prevent stacking context issues */
+    position: static;
+  }
+  
+  /* Ensure mobile menu is visible above all content */
+  .mobile-menu-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+  }
+  
+  .mobile-menu-content {
+    position: relative !important;
+    z-index: 10000 !important;
+  }
+}
+
 /* Staggered entrance for main sections */
 #hero {
   transition-delay: 0.2s;
@@ -670,4 +690,10 @@ html {
 
 .registry-mobile-pagination button:disabled {
   opacity: 0.4;
+}
+
+/* Ensure mobile menu is always visible */
+.mobile-menu-overlay,
+.mobile-menu-content {
+  position: fixed !important;
 }
