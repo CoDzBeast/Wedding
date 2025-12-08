@@ -33,6 +33,16 @@ html {
     /* Remove position fixed to prevent stacking context issues */
     position: static;
   }
+  
+  /* Ensure mobile navigation elements stay fixed even when .no-scroll is applied */
+  .md\:hidden.fixed {
+    position: fixed !important;
+  }
+  
+  /* Ensure mobile navigation elements have proper z-index */
+  .md\:hidden.fixed.z-50 {
+    z-index: 50 !important;
+  }
 }
 
 /* Staggered entrance for main sections */
@@ -657,6 +667,20 @@ html {
   
   .mobile-only {
     display: block;
+  }
+  
+  /* Ensure mobile navigation elements stay fixed */
+  .fixed.top-0.right-0.z-50 {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+  }
+  
+  .fixed.inset-0.z-40 {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 40 !important;
   }
 }
 
