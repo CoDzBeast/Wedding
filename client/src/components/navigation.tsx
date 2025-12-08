@@ -15,17 +15,7 @@ const navLinks = [
 ];
 
 export function Navigation({ activeSection }: NavigationProps) {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
@@ -33,7 +23,7 @@ export function Navigation({ activeSection }: NavigationProps) {
 
   return (
     <>
-      {/* Main header - scrolls normally with page */}
+      {/* Main header - scrolls normally with page, contains only the logo */}
       <header className="relative w-full max-w-full overflow-x-visible">
         <div className="max-w-7xl mx-auto px-6 py-4 w-full">
           {/* Desktop navigation - remains in header */}
@@ -57,23 +47,23 @@ export function Navigation({ activeSection }: NavigationProps) {
               </a>
             ))}
           </div>
-
-          {/* Mobile header content - logo only, scrolls with page */}
-          <div className="md:hidden flex items-center justify-between">
-            <a
-              href="#hero"
-              onClick={closeMobileMenu}
-              className="font-script text-2xl text-foreground"
-              data-testid="link-home-mobile"
-            >
-              S & Z
-            </a>
-          </div>
         </div>
       </header>
 
+      {/* Mobile logo - scrolls normally with page */}
+      <div className="md:hidden absolute top-0 left-0 z-40 px-6 py-4">
+        <a
+          href="#hero"
+          onClick={closeMobileMenu}
+          className="font-script text-2xl text-foreground"
+          data-testid="link-home-mobile"
+        >
+          S & Z
+        </a>
+      </div>
+
       {/* Sticky mobile menu button - always visible */}
-      <div className="md:hidden fixed top-0 right-0 z-[9999]">
+      <div className="md:hidden fixed top-0 right-0 z-50">
         <div className="flex justify-end px-6 py-4 bg-background/95 backdrop-blur-md shadow-sm">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -107,16 +97,16 @@ export function Navigation({ activeSection }: NavigationProps) {
         </div>
       </div>
 
-      {/* Mobile menu dropdown - positioned relative to viewport */}
+      {/* Mobile menu dropdown - positioned fixed to viewport */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[9998] md:hidden">
+        <div className="fixed inset-0 z-40 md:hidden">
           {/* Backdrop with click handler to close menu */}
           <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-background/90 backdrop-blur-sm"
             onClick={closeMobileMenu}
           />
           {/* Menu content - positioned absolutely to appear above backdrop */}
-          <div className="absolute inset-0 flex flex-col items-center justify-start pt-20 gap-6 z-[9999]">
+          <div className="absolute inset-0 flex flex-col items-center justify-start pt-20 gap-6 z-50">
             {navLinks.map((link) => (
               <a
                 key={link.id}
