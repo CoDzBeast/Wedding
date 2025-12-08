@@ -63,50 +63,49 @@ export function Navigation({ activeSection }: NavigationProps) {
       </div>
 
       {/* Sticky mobile menu button - always visible */}
-      <div className="md:hidden fixed top-0 right-0 z-50">
-        <div className="flex justify-end px-6 py-4 bg-background/95 backdrop-blur-md shadow-sm">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-foreground p-2"
-            data-testid="button-menu-toggle"
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+      {/* Moved outside header with correct fixed positioning and z-index */}
+      <div className="md:hidden fixed top-0 right-4 z-[9999]">
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="text-foreground p-2 mt-4 mr-4"
+          data-testid="button-menu-toggle"
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
+            {mobileMenuOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            )}
+          </svg>
+        </button>
       </div>
 
-      {/* Mobile menu dropdown - positioned fixed to viewport */}
+      {/* Mobile menu dropdown - positioned fixed to viewport with correct z-index */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
+        <div className="fixed inset-0 z-[9998] md:hidden">
           {/* Backdrop with click handler to close menu */}
           <div
             className="absolute inset-0 bg-background/90 backdrop-blur-sm"
             onClick={closeMobileMenu}
           />
           {/* Menu content - positioned absolutely to appear above backdrop */}
-          <div className="absolute inset-0 flex flex-col items-center justify-start pt-20 gap-6 z-50">
+          <div className="absolute inset-0 flex flex-col items-center justify-start pt-20 gap-6">
             {navLinks.map((link) => (
               <a
                 key={link.id}

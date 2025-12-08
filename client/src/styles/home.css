@@ -34,14 +34,18 @@ html {
     position: static;
   }
   
-  /* Ensure mobile navigation elements stay fixed even when .no-scroll is applied */
+  /* Ensure mobile navigation elements stay fixed */
   .md\:hidden.fixed {
     position: fixed !important;
   }
   
   /* Ensure mobile navigation elements have proper z-index */
-  .md\:hidden.fixed.z-50 {
-    z-index: 50 !important;
+  .md\:hidden.fixed.z-\[9999\] {
+    z-index: 9999 !important;
+  }
+  
+  .fixed.inset-0.z-\[9998\] {
+    z-index: 9998 !important;
   }
 }
 
@@ -670,17 +674,17 @@ html {
   }
   
   /* Ensure mobile navigation elements stay fixed */
-  .fixed.top-0.right-0.z-50 {
+  .fixed.top-0.right-4.z-\[9999\] {
     position: fixed !important;
     top: 0 !important;
-    right: 0 !important;
-    z-index: 50 !important;
+    right: 1rem !important;
+    z-index: 9999 !important;
   }
   
-  .fixed.inset-0.z-40 {
+  .fixed.inset-0.z-\[9998\] {
     position: fixed !important;
     inset: 0 !important;
-    z-index: 40 !important;
+    z-index: 9998 !important;
   }
 }
 
