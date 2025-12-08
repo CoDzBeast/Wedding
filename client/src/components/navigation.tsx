@@ -104,7 +104,7 @@ export function Navigation({ activeSection }: NavigationProps) {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[9999] md:hidden overflow-hidden mobile-menu-overlay">
+        <div className="fixed inset-0 z-[9999] md:hidden mobile-menu-overlay">
           <div
             className="absolute inset-0 bg-background/95 backdrop-blur-md"
             onClick={closeMobileMenu}
