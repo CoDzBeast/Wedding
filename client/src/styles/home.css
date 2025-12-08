@@ -42,7 +42,7 @@ html {
   }
   
   .mobile-menu-content {
-    position: relative !important;
+    position: absolute !important;
     z-index: 10000 !important;
   }
 }

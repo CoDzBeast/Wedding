@@ -105,11 +105,13 @@ export function Navigation({ activeSection }: NavigationProps) {
 
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[9999] md:hidden mobile-menu-overlay">
+          {/* Backdrop with click handler to close menu */}
           <div
-            className="absolute inset-0 bg-background/95 backdrop-blur-md"
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
             onClick={closeMobileMenu}
           />
-          <div className="relative h-full flex flex-col items-center justify-center gap-6 z-[10000] mobile-menu-content">
+          {/* Menu content - positioned absolutely to appear above backdrop */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 z-[10000] mobile-menu-content">
             {navLinks.map((link) => (
               <a
                 key={link.id}
