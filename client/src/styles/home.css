@@ -33,6 +33,15 @@ html {
     /* Remove position fixed to prevent stacking context issues */
     position: static;
   }
+  
+  /* Ensure mobile navigation is always visible and not affected by parent container styles */
+  .mobile-nav-fixed {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+    width: 100% !important;
+  }
 }
 
 /* Staggered entrance for main sections */

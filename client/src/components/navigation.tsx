@@ -63,7 +63,7 @@ export function Navigation({ activeSection }: NavigationProps) {
       </div>
 
       {/* Sticky mobile menu button - always visible */}
-      <div className="md:hidden fixed top-0 right-0 z-50">
+      <div className="md:hidden fixed top-0 right-0 z-50 w-full">
         <div className="flex justify-end px-6 py-4 bg-background/95 backdrop-blur-md shadow-sm">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
