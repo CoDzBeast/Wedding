@@ -8,7 +8,7 @@ export function RsvpSection() {
     lastName: "",
     email: "",
     attending: "Joyfully accepts",
-    guestCount: 1,
+    guestCount: 1 as number | "", // Allow number or empty string
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,16 +30,13 @@ export function RsvpSection() {
     const value = e.target.value;
     // Allow empty input while typing
     if (value === "") {
-      setFormData(prev => ({ ...prev, guestCount: 1 })); // Default to 1 when empty
+      setFormData(prev => ({ ...prev, guestCount: "" }));
       return;
     }
     
-    // Only allow numeric values
-    const numValue = parseInt(value);
-    if (!isNaN(numValue)) {
-      // Ensure value is within valid range
-      const clampedValue = Math.max(1, Math.min(10, numValue));
-      setFormData(prev => ({ ...prev, guestCount: clampedValue }));
+    // Only allow numeric values and update state immediately for smooth typing
+    if (/^\d*$/.test(value)) {
+      setFormData(prev => ({ ...prev, guestCount: value as unknown as number }));
     }
   };
 
@@ -47,7 +44,13 @@ export function RsvpSection() {
     e.preventDefault();
     
     // Ensure guestCount is a valid number before submitting
-    const guestCountValue = Math.max(1, Math.min(10, formData.guestCount));
+    let guestCountValue: number;
+    if (formData.guestCount === "") {
+      guestCountValue = 1;
+    } else {
+      const parsedValue = parseInt(formData.guestCount as unknown as string);
+      guestCountValue = isNaN(parsedValue) ? 1 : Math.max(1, Math.min(10, parsedValue));
+    }
     
     // Create form data for Jotform submission
     const jotformData = new FormData();
@@ -249,6 +252,7 @@ export function RsvpSection() {
                 max="10"
                 value={formData.guestCount}
                 onChange={handleGuestCountChange}
+                placeholder="1"
                 className="flex h-9 w-full py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 border-b-2 border-border rounded-none bg-transparent px-0 font-sans focus-visible:ring-0 focus-visible:border-primary transition-colors"
                 data-testid="input-guest-count"
               />
