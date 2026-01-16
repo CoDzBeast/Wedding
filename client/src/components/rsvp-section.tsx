@@ -133,10 +133,16 @@ export function RsvpSection() {
         </h2>
 
         <p
-          className="font-sans text-base text-center text-muted-foreground mb-12 leading-relaxed"
+          className="font-sans text-base text-center text-muted-foreground mb-4 leading-relaxed"
           data-testid="text-rsvp-message"
         >
-          Please respond by August 1, 2025
+          Please respond by March 1, 2026
+        </p>
+        <p
+          className="font-sans text-sm text-center text-muted-foreground mb-12 leading-relaxed italic"
+          data-testid="text-rsvp-note"
+        >
+          Note: Due to venue capacity limitations, plus-ones are unable to join us unfortunately.
         </p>
 
         <div>
