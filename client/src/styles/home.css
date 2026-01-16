@@ -281,6 +281,55 @@ html {
   right: -55px;
 }
 
+/* Registry Links Styles */
+.registry-links-wrapper {
+  margin: 50px 0 60px 0;
+  text-align: center;
+}
+
+.registry-links-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin: 0 auto;
+  max-width: 500px;
+}
+
+.registry-link-button {
+  display: inline-block;
+  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif);
+  font-size: 24px;
+  font-weight: 400;
+  color: hsl(var(--foreground, 0 0% 15%));
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.registry-link-button:hover,
+.registry-link-button:focus {
+  color: hsl(var(--primary, 20 80% 50%));
+  text-decoration: none;
+  border-color: hsl(var(--primary, 20 80% 50%) / 0.3);
+  background: hsl(var(--primary, 20 80% 50%) / 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.registry-link-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
 /* Venmo Subsection Styles */
 .registry-venmo-wrapper {
   margin-top: 60px;
@@ -452,6 +501,24 @@ html {
     width: 100%;
     transform: none !important;
     -webkit-transform: none !important;
+  }
+
+  /* Mobile styles for registry links */
+  .registry-links-wrapper {
+    margin: 35px 0 45px 0;
+  }
+
+  .registry-links-container {
+    flex-direction: column;
+    gap: 20px;
+    max-width: 100%;
+  }
+
+  .registry-link-button {
+    font-size: 20px;
+    padding: 10px 20px;
+    width: 80%;
+    max-width: 280px;
   }
 
   #registry .max-w-3xl {
@@ -644,6 +711,18 @@ html {
     bottom: -45px;
     top: auto;
     transform: none;
+  }
+
+  /* Additional mobile styles for registry links on small screens */
+  .registry-links-container {
+    gap: 16px;
+  }
+
+  .registry-link-button {
+    font-size: 18px;
+    padding: 8px 16px;
+    width: 85%;
+    max-width: 260px;
   }
 
   .registry-arrow.left {
