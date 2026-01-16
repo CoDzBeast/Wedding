@@ -126,7 +126,7 @@ export function OurStorySection() {
               transition={{ duration: 0.8, delay: 0.75 }}
               data-testid="text-story-paragraph-6"
             >
-              Later in (insert month), Zachary got down on one knee and asked
+              Later in November, Zachary got down on one knee and asked
               Samantha to marry him. After a moment of shock and excitement, she
               said yes.
             </motion.p>
