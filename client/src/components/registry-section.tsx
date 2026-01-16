@@ -1,45 +1,13 @@
-import { useRef, useState, useEffect } from "react";
-import registryData from "../registry/registry.json";
-import RegistryCard from "./RegistryCard";
+import { useRef } from "react";
 
 export function RegistrySection() {
   const ref = useRef(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [mobilePage, setMobilePage] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
 
-  // Check if we're on mobile
-  useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(typeof window !== "undefined" && window.innerWidth <= 768);
-    };
-    
-    checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    
-    return () => {
-      window.removeEventListener('resize', checkIsMobile);
-    };
-  }, []);
-
-  const itemsPerPage = 6;
-  const totalPages = Math.ceil(registryData.length / itemsPerPage);
-
-  const start = mobilePage * itemsPerPage;
-  const end = start + itemsPerPage;
-  const pagedItems = registryData.slice(start, end);
-
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -350, behavior: "smooth" });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 350, behavior: "smooth" });
-    }
-  };
+  const registryLinks = [
+    { name: "Honeyfund", url: "https://www.honeyfund.com" },
+    { name: "Amazon", url: "https://www.amazon.com/wedding" },
+    { name: "Target", url: "https://www.target.com/wedding" }
+  ];
 
   return (
     <section
@@ -64,38 +32,19 @@ export function RegistrySection() {
           locations.
         </p>
 
-        {/* Desktop view wrapper (unchanged) */}
-        <div className="desktop-only">
-          <div className="registry-carousel-wrapper">
-            <button className="registry-arrow left" onClick={scrollLeft}>‹</button>
-
-            <div ref={scrollRef} className="registry-scroll-area">
-              {registryData.map((item, index) => (
-                <div className="registry-item" key={index}>
-                  <RegistryCard
-                    url={item.url}
-                    image={item.image}
-                    price={item.price}
-                  />
-                </div>
-              ))}
-            </div>
-
-            <button className="registry-arrow right" onClick={scrollRight}>›</button>
-          </div>
-        </div>
-
-        {/* Mobile view wrapper - SHOW ALL ITEMS */}
-        <div className="mobile-only">
-          <div className="registry-mobile-grid">
-            {registryData.map((item, idx) => (
-              <div className="registry-card" key={idx}>
-                <RegistryCard
-                  url={item.url}
-                  image={item.image}
-                  price={item.price}
-                />
-              </div>
+        {/* Registry Links - Simple text buttons */}
+        <div className="registry-links-wrapper">
+          <div className="registry-links-container">
+            {registryLinks.map((link, index) => (
+              <a
+                key={index}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="registry-link-button"
+              >
+                {link.name}
+              </a>
             ))}
           </div>
         </div>
