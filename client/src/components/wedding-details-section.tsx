@@ -72,7 +72,7 @@ export function WeddingDetailsSection() {
                 Saturday, May 2, 2026
               </p>
               <p className="font-serif text-lg text-foreground" data-testid="text-reception-time">
-                4:30 PM
+                5:00 PM
               </p>
               <p className="font-serif text-lg text-muted-foreground" data-testid="text-reception-address">
                 Creekside Meadows
