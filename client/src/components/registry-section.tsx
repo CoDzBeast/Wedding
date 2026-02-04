@@ -4,9 +4,9 @@ export function RegistrySection() {
   const ref = useRef(null);
 
   const registryLinks = [
-    { name: "Honeyfund", url: "https://www.honeyfund.com" },
-    { name: "Amazon", url: "https://www.amazon.com/wedding" },
-    { name: "Target", url: "https://www.target.com/wedding" }
+    { name: "Honeyfund", url: "https://www.honeyfund.com/site/tuohy-mcnear-05-02-2026" },
+    { name: "Amazon", url: "https://www.amazon.com/wedding/guest-view/1KMB43DB8DEOQ" },
+    { name: "Target", url: "https://www.target.com/gift-registry/gift/mcnear-wedding" }
   ];
 
   return (
