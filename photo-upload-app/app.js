@@ -18,6 +18,8 @@ const galleryBtn = document.getElementById('gallery-btn');
 const retakeBtn = document.getElementById('retake-btn');
 const newPhotoBtn = document.getElementById('new-photo-btn');
 const fallbackLink = document.getElementById('fallback-link');
+const errorTitle = document.getElementById('error-title');
+const errorGalleryBtn = document.getElementById('error-gallery-btn');
 const errorMessage = document.getElementById('error-message');
 const progressWrap = document.getElementById('upload-progress-wrap');
 const progressFill = document.getElementById('progress-fill');
@@ -33,6 +35,12 @@ let previewUrl;
 function showScreen(name) {
   Object.values(screens).forEach((screen) => screen.classList.remove('active'));
   screens[name].classList.add('active');
+}
+
+function showError(title, message) {
+  errorTitle.textContent = title;
+  errorMessage.textContent = message;
+  showScreen('error');
 }
 
 function setProgress(percent, label) {
@@ -70,9 +78,11 @@ async function startCamera() {
     video.srcObject = stream;
     showScreen('camera');
   } catch (_error) {
-    errorMessage.textContent = 'Camera permission blocked or unavailable in this browser.';
-    fallbackLink.href = 'intent://camera#Intent;scheme=android-app;end';
-    showScreen('error');
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    stream = null;
+    fallbackLink.href = '#';
+    showError('Choose Photos', 'Camera access is blocked or unavailable. You can still upload photos from your gallery.');
+    errorGalleryBtn.focus();
   }
 }
 
@@ -185,18 +195,23 @@ newPhotoBtn.addEventListener('click', async () => {
 galleryBtn.addEventListener('click', () => {
   mediaInput.click();
 });
+errorGalleryBtn.addEventListener('click', () => {
+  mediaInput.click();
+});
+fallbackLink.addEventListener('click', (event) => {
+  event.preventDefault();
+  mediaInput.click();
+});
 mediaInput.addEventListener('change', () => {
   try {
     if ((mediaInput.files || []).length > 0) showSelectedPreview();
   } catch (err) {
-    errorMessage.textContent = err.message;
-    showScreen('error');
+    showError('Photo Selection Failed', err.message);
   }
 });
 
 form.addEventListener('submit', (e) => uploadPhoto(e).catch((err) => {
-  errorMessage.textContent = err.message;
-  showScreen('error');
+  showError('Upload Failed', err.message);
 }).finally(() => {
   usePhotoBtn.disabled = false;
 }));
