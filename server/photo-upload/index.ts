@@ -13,6 +13,9 @@ const UPLOADS_DIR = process.env.PHOTO_UPLOADS_DIR || path.resolve(process.cwd(),
 const ADMIN_TOKEN = process.env.PHOTO_ADMIN_TOKEN || 'change-me';
 const UPLOAD_TOKEN = process.env.PHOTO_UPLOAD_TOKEN || '';
 const MAX_UPLOAD_MB = Number.parseInt(process.env.PHOTO_UPLOAD_MAX_MB || '20', 10);
+const UPLOAD_ENABLE_UNTIL_RAW = process.env.PHOTO_UPLOAD_ENABLE_UNTIL || '';
+const UPLOAD_ENABLE_UNTIL = UPLOAD_ENABLE_UNTIL_RAW ? new Date(UPLOAD_ENABLE_UNTIL_RAW) : null;
+const HAS_VALID_UPLOAD_UNTIL = Boolean(UPLOAD_ENABLE_UNTIL && !Number.isNaN(UPLOAD_ENABLE_UNTIL.getTime()));
 
 fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
@@ -56,6 +59,24 @@ function requireUploadToken(req: express.Request, res: express.Response, next: e
   next();
 }
 
+
+function uploadsEnabledNow() {
+  if (!UPLOAD_ENABLE_UNTIL) return true;
+  if (!HAS_VALID_UPLOAD_UNTIL) return true;
+  return Date.now() <= UPLOAD_ENABLE_UNTIL.getTime();
+}
+
+function requireUploadsEnabled(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (!uploadsEnabledNow()) {
+    return res.status(410).json({
+      message: 'Uploads are disabled',
+      enabled: false,
+      enabledUntil: UPLOAD_ENABLE_UNTIL?.toISOString() ?? null,
+    });
+  }
+  next();
+}
+
 function requireAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
   if (req.headers['x-admin-token'] !== ADMIN_TOKEN) return res.status(403).json({ message: 'Forbidden' });
   next();
@@ -63,17 +84,24 @@ function requireAdmin(req: express.Request, res: express.Response, next: express
 
 export function registerPhotoUploadModule(app: Express) {
   app.use('/photo-upload/static', express.static(path.resolve(process.cwd(), 'photo-upload-app')));
-  app.use('/uploads', express.static(UPLOADS_DIR));
+  app.use('/uploads', requireAdmin, express.static(UPLOADS_DIR));
 
   app.get('/photo-upload', (_req, res) => {
     res.sendFile(path.resolve(process.cwd(), 'photo-upload-app/index.html'));
   });
 
   app.get('/api/upload/status', (_req, res) => {
-    res.json({ ok: true, maxUploadMb: MAX_UPLOAD_MB, uploadsDir: UPLOADS_DIR });
+    const enabled = uploadsEnabledNow();
+    res.json({
+      ok: true,
+      enabled,
+      enabledUntil: HAS_VALID_UPLOAD_UNTIL ? UPLOAD_ENABLE_UNTIL?.toISOString() : UPLOAD_ENABLE_UNTIL_RAW || null,
+      maxUploadMb: MAX_UPLOAD_MB,
+      uploadsDir: UPLOADS_DIR,
+    });
   });
 
-  app.post('/api/upload', requireUploadToken, upload.single('photo'), (req: Request, res) => {
+  app.post('/api/upload', requireUploadsEnabled, requireUploadToken, upload.single('photo'), (req: Request, res) => {
     if (!req.file) return res.status(400).json({ message: 'Photo is required' });
     const uploadedAt = new Date().toISOString();
     const guestName = typeof req.body.guestName === 'string' ? req.body.guestName : '';

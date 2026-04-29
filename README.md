@@ -84,13 +84,19 @@ The repository includes an upload module at `server/photo-upload/index.ts` that 
 - `PHOTO_UPLOAD_DB_PATH`: SQLite metadata path (default: `server/photo-upload/photo_upload.sqlite`)
 - `PHOTO_UPLOAD_MAX_MB`: max upload size in MB (default: `20`)
 - `PHOTO_UPLOAD_TOKEN`: optional token required in `x-upload-token` for `POST /api/upload`
-- `PHOTO_ADMIN_TOKEN`: required in `x-admin-token` for admin endpoints
+- `PHOTO_ADMIN_TOKEN`: required in `x-admin-token` for admin endpoints and `/uploads/*` static file access
+- `PHOTO_UPLOAD_ENABLE_UNTIL`: optional ISO datetime cutoff (for example, one week after your event); after this time upload routes return HTTP `410`
 
 ### Endpoints
 
 - `GET /photo-upload`: simple upload page
-- `GET /api/upload/status`: health/config check for upload service
-- `POST /api/upload`: upload a single image (`multipart/form-data`, field name `photo`)
+- `GET /api/upload/status`: health/config check for upload service (includes `enabled` and `enabledUntil`)
+- `POST /api/upload`: upload a single image (`multipart/form-data`, field name `photo`); returns HTTP `410` after `PHOTO_UPLOAD_ENABLE_UNTIL` passes
 - `GET /api/photo-admin/uploads`: list recent uploads (admin token required)
+- `GET /uploads/<filename>`: serves uploaded files (admin token required via `x-admin-token`)
 
 > Recommendation: expose this app through Cloudflare Tunnel or Tailscale and set both `PHOTO_UPLOAD_TOKEN` and `PHOTO_ADMIN_TOKEN`.
+
+### One-week upload window workflow
+
+For a typical event-week flow, set `PHOTO_UPLOAD_ENABLE_UNTIL` to an ISO timestamp about 7 days after your event (for example: `2026-06-21T23:59:59Z`). Guests can upload until that time, and then upload routes automatically return `410 Gone` without needing a redeploy. You can verify the current state from `GET /api/upload/status` (`enabled` and `enabledUntil`).
