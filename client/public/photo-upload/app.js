@@ -14,6 +14,7 @@ const form = document.getElementById('upload-form');
 const mediaInput = document.getElementById('media-input');
 const captureBtn = document.getElementById('capture-btn');
 const switchCameraBtn = document.getElementById('switch-camera');
+const galleryBtn = document.getElementById('gallery-btn');
 const retakeBtn = document.getElementById('retake-btn');
 const newPhotoBtn = document.getElementById('new-photo-btn');
 const fallbackLink = document.getElementById('fallback-link');
@@ -121,6 +122,15 @@ newPhotoBtn.addEventListener('click', async () => {
   setProgress(0, 'Uploading...');
   await startCamera();
 });
+galleryBtn.addEventListener('click', () => {
+  mediaInput.click();
+});
+mediaInput.addEventListener('change', () => {
+  if ((mediaInput.files || []).length > 0 && !capturedBlob) {
+    showScreen('review');
+  }
+});
+
 form.addEventListener('submit', (e) => uploadPhoto(e).catch((err) => {
   errorMessage.textContent = err.message;
   showScreen('error');
