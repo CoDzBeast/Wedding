@@ -30,6 +30,11 @@
           </div>
         </div>
 
+        <div class="mode-switch" aria-label="Camera mode">
+          <button id="photo-mode-btn" class="mode-btn active" type="button" data-mode="photo">Photo</button>
+          <button id="video-mode-btn" class="mode-btn" type="button" data-mode="video">Video</button>
+        </div>
+
         <div class="controls">
           <button id="switch-camera" class="control-btn">Flip</button>
           <button id="capture-btn" class="shutter" aria-label="Take photo"></button>
@@ -42,6 +47,7 @@
         <div class="camera-shell">
           <div class="camera-square">
             <img id="preview" alt="Captured preview" />
+            <video id="video-preview" class="hidden" controls playsinline></video>
           </div>
         </div>
         <form id="upload-form" class="meta-form">
@@ -76,7 +82,7 @@
       </section>
     </main>
 
-    <input id="media-input" type="file" name="media" accept="image/*" multiple class="hidden" aria-label="Choose photos from gallery" />
+    <input id="media-input" type="file" name="media" accept="image/*,video/*" multiple class="hidden" aria-label="Choose photos or videos from gallery" />
 
     <script src="/static/overlays.js" defer></script>
     <script src="/static/app.js" defer></script>

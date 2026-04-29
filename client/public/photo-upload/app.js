@@ -11,6 +11,7 @@ const video = document.getElementById('camera');
 const canvas = document.getElementById('capture-canvas');
 const overlayCanvas = document.getElementById('overlay-canvas');
 const preview = document.getElementById('preview');
+const videoPreview = document.getElementById('video-preview');
 const form = document.getElementById('upload-form');
 const mediaInput = document.getElementById('media-input');
 const captureBtn = document.getElementById('capture-btn');
@@ -19,6 +20,8 @@ const galleryBtn = document.getElementById('gallery-btn');
 const filtersToggle = document.getElementById('filters-toggle');
 const filterSelector = document.getElementById('filter-selector');
 const filterOptions = Array.from(document.querySelectorAll('.filter-option'));
+const photoModeBtn = document.getElementById('photo-mode-btn');
+const videoModeBtn = document.getElementById('video-mode-btn');
 const retakeBtn = document.getElementById('retake-btn');
 const newPhotoBtn = document.getElementById('new-photo-btn');
 const fallbackLink = document.getElementById('fallback-link');
@@ -34,10 +37,16 @@ const usePhotoBtn = document.getElementById('use-photo-btn');
 let stream;
 let facingMode = 'environment';
 let capturedBlob;
+let capturedFile;
 let previewUrl;
 let filtersEnabled = false;
 let activeFilter = 'classic';
 let overlayAnimationFrame;
+let captureMode = 'photo';
+let mediaRecorder;
+let recordedChunks = [];
+let recordingStartedAt = 0;
+let recordingTimer;
 
 const overlayConfig = {
   names: 'Zach & Sam',
@@ -75,17 +84,31 @@ function setPreviewUrl(url) {
   if (previewUrl) URL.revokeObjectURL(previewUrl);
   previewUrl = url;
   preview.src = url;
+  videoPreview.src = "";
+  preview.classList.remove('hidden');
+  videoPreview.classList.add('hidden');
+}
+
+function setVideoPreviewUrl(url) {
+  if (previewUrl) URL.revokeObjectURL(previewUrl);
+  previewUrl = url;
+  videoPreview.src = url;
+  preview.removeAttribute('src');
+  preview.classList.add('hidden');
+  videoPreview.classList.remove('hidden');
 }
 
 function showSelectedPreview() {
   const [file] = Array.from(mediaInput.files || []);
   if (!file) return;
-  if (!file.type.startsWith('image/')) {
+  if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
     mediaInput.value = '';
-    throw new Error('Please choose image files only.');
+    throw new Error('Please choose image or video files only.');
   }
   capturedBlob = null;
-  setPreviewUrl(URL.createObjectURL(file));
+  capturedFile = null;
+  if (file.type.startsWith('video/')) setVideoPreviewUrl(URL.createObjectURL(file));
+  else setPreviewUrl(URL.createObjectURL(file));
   showScreen('review');
 }
 
@@ -132,8 +155,12 @@ function stopOverlayLoop() {
 }
 
 function updateFilterControls() {
+  const canUseFilters = captureMode === 'photo';
+  if (!canUseFilters) filtersEnabled = false;
+  filtersToggle.disabled = !canUseFilters;
   filtersToggle.setAttribute('aria-pressed', String(filtersEnabled));
   filtersToggle.classList.toggle('active', filtersEnabled);
+  filtersToggle.classList.toggle('disabled', !canUseFilters);
   filterSelector.classList.toggle('hidden', !filtersEnabled);
   filterOptions.forEach((button) => {
     button.classList.toggle('active', button.dataset.filter === activeFilter);
@@ -143,6 +170,20 @@ function updateFilterControls() {
   } else {
     stopOverlayLoop();
   }
+}
+
+function updateModeControls() {
+  photoModeBtn.classList.toggle('active', captureMode === 'photo');
+  videoModeBtn.classList.toggle('active', captureMode === 'video');
+  captureBtn.classList.toggle('video-mode', captureMode === 'video');
+  captureBtn.setAttribute('aria-label', captureMode === 'video' ? 'Record video' : 'Take photo');
+  updateFilterControls();
+}
+
+function setCaptureMode(mode) {
+  if (mediaRecorder && mediaRecorder.state === 'recording') return;
+  captureMode = mode;
+  updateModeControls();
 }
 
 async function startCamera() {
@@ -180,9 +221,73 @@ function capturePhoto() {
   canvas.toBlob((blob) => {
     if (!blob) return;
     capturedBlob = blob;
+    capturedFile = new File([blob], `guest-${Date.now()}.jpg`, { type: 'image/jpeg' });
     setPreviewUrl(URL.createObjectURL(blob));
     showScreen('review');
   }, 'image/jpeg', 0.92);
+}
+
+function getSupportedVideoMime() {
+  const choices = [
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp8,opus',
+    'video/webm',
+    'video/mp4',
+  ];
+  return choices.find((type) => window.MediaRecorder && MediaRecorder.isTypeSupported(type)) || '';
+}
+
+function updateRecordingLabel() {
+  if (!recordingStartedAt) return;
+  const elapsed = Math.floor((Date.now() - recordingStartedAt) / 1000);
+  captureBtn.setAttribute('aria-label', `Stop recording, ${elapsed} seconds`);
+}
+
+function startRecording() {
+  if (!stream || !window.MediaRecorder) {
+    showError('Video Unavailable', 'This browser does not support in-browser video recording. You can still choose videos from your gallery.');
+    return;
+  }
+
+  const mimeType = getSupportedVideoMime();
+  recordedChunks = [];
+  mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+  mediaRecorder.ondataavailable = (event) => {
+    if (event.data && event.data.size > 0) recordedChunks.push(event.data);
+  };
+  mediaRecorder.onstop = () => {
+    clearInterval(recordingTimer);
+    recordingTimer = null;
+    recordingStartedAt = 0;
+    captureBtn.classList.remove('recording');
+
+    const type = mediaRecorder.mimeType || mimeType || 'video/webm';
+    const extension = type.includes('mp4') ? 'mp4' : 'webm';
+    const blob = new Blob(recordedChunks, { type });
+    capturedBlob = blob;
+    capturedFile = new File([blob], `guest-${Date.now()}.${extension}`, { type });
+    setVideoPreviewUrl(URL.createObjectURL(blob));
+    showScreen('review');
+  };
+
+  mediaRecorder.start(1000);
+  recordingStartedAt = Date.now();
+  captureBtn.classList.add('recording');
+  updateRecordingLabel();
+  recordingTimer = setInterval(updateRecordingLabel, 500);
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+}
+
+function handleCapturePress() {
+  if (captureMode === 'video') {
+    if (mediaRecorder && mediaRecorder.state === 'recording') stopRecording();
+    else startRecording();
+    return;
+  }
+  capturePhoto();
 }
 
 function uploadWithProgress(formData, onProgress) {
@@ -231,11 +336,14 @@ async function uploadPhoto(e) {
   e.preventDefault();
   usePhotoBtn.disabled = true;
   const selectedFiles = Array.from(mediaInput.files || []);
-  if (!capturedBlob && selectedFiles.length === 0) throw new Error('Capture or choose at least one file');
-  if (selectedFiles.some((file) => !file.type.startsWith('image/'))) throw new Error('Please choose image files only.');
+  if (!capturedBlob && !capturedFile && selectedFiles.length === 0) throw new Error('Capture or choose at least one file');
+  if (selectedFiles.some((file) => !file.type.startsWith('image/') && !file.type.startsWith('video/'))) {
+    throw new Error('Please choose image or video files only.');
+  }
 
   const files = [...selectedFiles];
-  if (capturedBlob) files.unshift(new File([capturedBlob], `guest-${Date.now()}.jpg`, { type: 'image/jpeg' }));
+  if (capturedFile) files.unshift(capturedFile);
+  else if (capturedBlob) files.unshift(new File([capturedBlob], `guest-${Date.now()}.jpg`, { type: capturedBlob.type || 'image/jpeg' }));
 
   progressWrap.classList.remove('hidden');
   setProgress(0, `Preparing ${files.length} file${files.length === 1 ? '' : 's'}...`);
@@ -260,7 +368,9 @@ async function uploadPhoto(e) {
   showScreen('success');
 }
 
-captureBtn.addEventListener('click', capturePhoto);
+captureBtn.addEventListener('click', handleCapturePress);
+photoModeBtn.addEventListener('click', () => setCaptureMode('photo'));
+videoModeBtn.addEventListener('click', () => setCaptureMode('video'));
 filtersToggle.addEventListener('click', () => {
   filtersEnabled = !filtersEnabled;
   updateFilterControls();
@@ -279,6 +389,7 @@ switchCameraBtn.addEventListener('click', async () => {
 retakeBtn.addEventListener('click', () => showScreen('camera'));
 newPhotoBtn.addEventListener('click', async () => {
   capturedBlob = null;
+  capturedFile = null;
   mediaInput.value = '';
   progressWrap.classList.add('hidden');
   progressFill.style.width = '0%';
@@ -315,6 +426,17 @@ window.addEventListener('orientationchange', () => {
   }, 250);
 });
 
+document.querySelectorAll('.camera-square').forEach((box) => {
+  box.addEventListener('click', (event) => {
+    if (event.target.closest('button') || event.target.closest('.filter-selector')) return;
+    box.classList.toggle('fullscreen');
+    setTimeout(() => {
+      sizeOverlayCanvas();
+      if (filtersEnabled) drawOverlayFrame();
+    }, 120);
+  });
+});
+
 form.addEventListener('submit', (e) => uploadPhoto(e).catch((err) => {
   showError('Upload Failed', err.message);
 }).finally(() => {
@@ -322,4 +444,5 @@ form.addEventListener('submit', (e) => uploadPhoto(e).catch((err) => {
 }));
 
 updateFilterControls();
+updateModeControls();
 startCamera();
