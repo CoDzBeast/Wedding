@@ -20,6 +20,7 @@ const galleryBtn = document.getElementById('gallery-btn');
 const filtersToggle = document.getElementById('filters-toggle');
 const filterSelector = document.getElementById('filter-selector');
 const filterOptions = Array.from(document.querySelectorAll('.filter-option'));
+const fullscreenControls = document.getElementById('fullscreen-controls');
 const photoModeBtn = document.getElementById('photo-mode-btn');
 const videoModeBtn = document.getElementById('video-mode-btn');
 const retakeBtn = document.getElementById('retake-btn');
@@ -55,6 +56,13 @@ const overlayConfig = {
   hashtag: '#ZachAndSam',
   accentColor: '#D4AF37',
   textColor: '#FFFFFF',
+};
+
+const controlHomes = {
+  modeSwitch: document.querySelector('.mode-switch'),
+  controls: document.querySelector('.controls'),
+  modeParent: document.querySelector('.mode-switch').parentElement,
+  controlsParent: document.querySelector('.controls').parentElement,
 };
 
 function showScreen(name) {
@@ -184,6 +192,33 @@ function setCaptureMode(mode) {
   if (mediaRecorder && mediaRecorder.state === 'recording') return;
   captureMode = mode;
   updateModeControls();
+}
+
+function enterFullscreenCamera(box) {
+  box.classList.add('fullscreen');
+  fullscreenControls.setAttribute('aria-hidden', 'false');
+  fullscreenControls.appendChild(controlHomes.modeSwitch);
+  fullscreenControls.appendChild(controlHomes.controls);
+  setTimeout(() => {
+    sizeOverlayCanvas();
+    if (filtersEnabled) drawOverlayFrame();
+  }, 120);
+}
+
+function exitFullscreenCamera(box) {
+  box.classList.remove('fullscreen');
+  fullscreenControls.setAttribute('aria-hidden', 'true');
+  controlHomes.modeParent.insertBefore(controlHomes.modeSwitch, controlHomes.controls);
+  controlHomes.controlsParent.insertBefore(controlHomes.controls, screens.review);
+  setTimeout(() => {
+    sizeOverlayCanvas();
+    if (filtersEnabled) drawOverlayFrame();
+  }, 120);
+}
+
+function toggleFullscreenCamera(box) {
+  if (box.classList.contains('fullscreen')) exitFullscreenCamera(box);
+  else enterFullscreenCamera(box);
 }
 
 async function startCamera() {
@@ -428,12 +463,8 @@ window.addEventListener('orientationchange', () => {
 
 document.querySelectorAll('.camera-square').forEach((box) => {
   box.addEventListener('click', (event) => {
-    if (event.target.closest('button') || event.target.closest('.filter-selector')) return;
-    box.classList.toggle('fullscreen');
-    setTimeout(() => {
-      sizeOverlayCanvas();
-      if (filtersEnabled) drawOverlayFrame();
-    }, 120);
+    if (event.target.closest('button') || event.target.closest('.filter-selector') || event.target.closest('.fullscreen-controls')) return;
+    toggleFullscreenCamera(box);
   });
 });
 

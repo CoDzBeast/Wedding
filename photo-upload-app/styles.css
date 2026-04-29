@@ -163,7 +163,7 @@ canvas {
   content: "Tap to exit";
   position: absolute;
   left: 50%;
-  bottom: max(16px, env(safe-area-inset-bottom));
+  bottom: max(176px, calc(env(safe-area-inset-bottom) + 176px));
   transform: translateX(-50%);
   z-index: 6;
   padding: 8px 12px;
@@ -172,6 +172,63 @@ canvas {
   color: #fff;
   font-size: 12px;
   pointer-events: none;
+}
+
+.fullscreen-controls {
+  display: none;
+}
+
+.camera-square.fullscreen .fullscreen-controls {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px max(16px, env(safe-area-inset-bottom));
+  pointer-events: auto;
+}
+
+.camera-square.fullscreen .mode-switch {
+  width: min(92vw, 480px);
+  margin: 0 auto;
+  background: rgba(44, 44, 44, 0.48);
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(14px);
+}
+
+.camera-square.fullscreen .mode-btn {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.camera-square.fullscreen .mode-btn.active {
+  color: #fff;
+  background: rgba(139, 139, 110, 0.92);
+}
+
+.camera-square.fullscreen .controls {
+  width: min(92vw, 480px);
+  margin: 0 auto;
+  padding: 0;
+}
+
+.camera-square.fullscreen .control-btn {
+  background: rgba(44, 44, 44, 0.5);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(14px);
+}
+
+.camera-square.fullscreen .shutter {
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.28);
+}
+
+.camera-square.fullscreen .filter-toggle {
+  top: max(14px, env(safe-area-inset-top));
+}
+
+.camera-square.fullscreen .filter-selector {
+  bottom: max(154px, calc(env(safe-area-inset-bottom) + 154px));
 }
 
 .overlay-canvas {
