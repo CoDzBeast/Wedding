@@ -11,6 +11,8 @@ const DB_PATH = process.env.PHOTO_UPLOAD_DB_PATH || path.resolve(process.cwd(), 
 const UPLOADS_DIR = process.env.PHOTO_UPLOADS_DIR || path.resolve(process.cwd(), 'uploads');
 // Configure admin token here (and place behind Cloudflare/public hostname + tunnel policy).
 const ADMIN_TOKEN = process.env.PHOTO_ADMIN_TOKEN || 'change-me';
+const UPLOAD_TOKEN = process.env.PHOTO_UPLOAD_TOKEN || '';
+const MAX_UPLOAD_MB = Number.parseInt(process.env.PHOTO_UPLOAD_MAX_MB || '20', 10);
 
 fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
@@ -21,10 +23,17 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     filename TEXT NOT NULL,
     originalName TEXT NOT NULL,
+    mimeType TEXT,
+    sizeBytes INTEGER,
     uploadedAt TEXT NOT NULL,
     guestName TEXT,
     message TEXT
   )`);
+});
+
+db.serialize(() => {
+  db.run(`ALTER TABLE uploads ADD COLUMN mimeType TEXT`, () => undefined);
+  db.run(`ALTER TABLE uploads ADD COLUMN sizeBytes INTEGER`, () => undefined);
 });
 
 const storage = multer.diskStorage({
@@ -34,12 +43,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 8 * 1024 * 1024 },
+  limits: { fileSize: MAX_UPLOAD_MB * 1024 * 1024 },
   fileFilter: (_req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
     if (file.mimetype.startsWith('image/')) cb(null, true);
     else cb(new Error('Only image uploads are allowed'));
   },
 });
+
+function requireUploadToken(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (!UPLOAD_TOKEN) return next();
+  if (req.headers['x-upload-token'] !== UPLOAD_TOKEN) return res.status(403).json({ message: 'Forbidden' });
+  next();
+}
 
 function requireAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
   if (req.headers['x-admin-token'] !== ADMIN_TOKEN) return res.status(403).json({ message: 'Forbidden' });
@@ -54,15 +69,19 @@ export function registerPhotoUploadModule(app: Express) {
     res.sendFile(path.resolve(process.cwd(), 'photo-upload-app/index.html'));
   });
 
-  app.post('/api/upload', upload.single('photo'), (req: Request, res) => {
+  app.get('/api/upload/status', (_req, res) => {
+    res.json({ ok: true, maxUploadMb: MAX_UPLOAD_MB, uploadsDir: UPLOADS_DIR });
+  });
+
+  app.post('/api/upload', requireUploadToken, upload.single('photo'), (req: Request, res) => {
     if (!req.file) return res.status(400).json({ message: 'Photo is required' });
     const uploadedAt = new Date().toISOString();
     const guestName = typeof req.body.guestName === 'string' ? req.body.guestName : '';
     const message = typeof req.body.message === 'string' ? req.body.message : '';
 
     db.run(
-      `INSERT INTO uploads (filename, originalName, uploadedAt, guestName, message) VALUES (?, ?, ?, ?, ?)`,
-      [req.file.filename, req.file.originalname, uploadedAt, guestName, message],
+      `INSERT INTO uploads (filename, originalName, mimeType, sizeBytes, uploadedAt, guestName, message) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [req.file.filename, req.file.originalname, req.file.mimetype, req.file.size, uploadedAt, guestName, message],
       (err: Error | null) => {
         if (err) return res.status(500).json({ message: 'Failed to save metadata' });
         res.status(201).json({ ok: true, filename: req.file?.filename });
@@ -75,7 +94,7 @@ export function registerPhotoUploadModule(app: Express) {
   });
 
   app.get('/api/photo-admin/uploads', requireAdmin, (_req, res) => {
-    db.all('SELECT filename, originalName, uploadedAt, guestName, message FROM uploads ORDER BY id DESC LIMIT 200', (err: Error | null, rows: unknown[]) => {
+    db.all('SELECT filename, originalName, mimeType, sizeBytes, uploadedAt, guestName, message FROM uploads ORDER BY id DESC LIMIT 200', (err: Error | null, rows: unknown[]) => {
       if (err) return res.status(500).json({ message: 'Query failed' });
       res.json(rows);
     });
