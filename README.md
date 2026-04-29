@@ -74,3 +74,26 @@ npm run build
 ```
 
 The build output will be in the `dist/public` directory.
+## Photo Upload Backend (Home Server)
+
+The repository includes an upload module at `server/photo-upload/index.ts` that can be used to accept guest photo uploads directly to your storage box.
+
+### Environment variables
+
+- `PHOTO_UPLOADS_DIR`: absolute folder where images are stored (default: `./uploads`)
+- `PHOTO_UPLOAD_DB_PATH`: SQLite metadata path (default: `server/photo-upload/photo_upload.sqlite`)
+- `PHOTO_UPLOAD_MAX_MB`: max upload size in MB (default: `20`)
+- `PHOTO_UPLOAD_ENABLE_UNTIL`: optional ISO date/time cutoff (example: `2026-05-08T23:59:59Z`)
+- `PHOTO_UPLOAD_TOKEN`: optional token required in `x-upload-token` for `POST /api/upload`
+- `PHOTO_ADMIN_TOKEN`: required in `x-admin-token` for admin endpoints
+
+### Endpoints
+
+- `GET /photo-upload`: simple upload page
+- `GET /api/upload/status`: health/config check for upload service
+- `POST /api/upload`: upload a single image (`multipart/form-data`, field name `photo`)
+- `GET /api/photo-admin/uploads`: list recent uploads (admin token required)
+- `/uploads/*`: now also requires admin token in `x-admin-token`
+
+> Recommendation: expose this app through Cloudflare Tunnel or Tailscale and set both `PHOTO_UPLOAD_TOKEN` and `PHOTO_ADMIN_TOKEN`.
+> For temporary use (one week), set `PHOTO_UPLOAD_ENABLE_UNTIL` so routes auto-disable after the event window.
