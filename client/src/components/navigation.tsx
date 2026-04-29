@@ -46,6 +46,15 @@ export function Navigation({ activeSection }: NavigationProps) {
                 )}
               </a>
             ))}
+            <a
+              href="https://photos.themcnears.com/photo-upload"
+              target="_blank"
+              rel="noreferrer"
+              className="font-serif text-sm tracking-wide text-muted-foreground hover:text-foreground transition-all duration-300"
+              data-testid="link-photo-upload-external"
+            >
+              Upload Photos
+            </a>
           </div>
         </div>
       </header>
@@ -121,6 +130,16 @@ export function Navigation({ activeSection }: NavigationProps) {
                 {link.label}
               </a>
             ))}
+            <a
+              href="https://photos.themcnears.com/photo-upload"
+              target="_blank"
+              rel="noreferrer"
+              onClick={closeMobileMenu}
+              className="font-serif text-2xl tracking-wide text-muted-foreground hover:text-foreground transition-all duration-300"
+              data-testid="link-photo-upload-external-mobile"
+            >
+              Upload Photos
+            </a>
           </div>
         </div>
       )}

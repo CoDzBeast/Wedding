@@ -74,3 +74,35 @@ npm run build
 ```
 
 The build output will be in the `dist/public` directory.
+
+## Isolated Guest Photo Upload (GitHub Pages + Home Server)
+
+The `photo-upload-app/` and `server/photo-upload/` code is intentionally isolated from the main wedding SPA.
+
+### Recommended production setup
+
+1. Keep the wedding website on GitHub Pages (`https://www.themcnears.com`).
+2. Host the Node/Express uploader on your home server with large storage (1TB+), ideally behind Cloudflare Tunnel.
+3. Point a subdomain such as `https://photos.themcnears.com` to the home server service.
+4. Guests use the **Upload Photos** link in the wedding site nav, which opens:
+   - `https://photos.themcnears.com/photo-upload`
+
+### Required environment variables for the uploader server
+
+- `PHOTO_UPLOADS_DIR` — filesystem path on your home server where files are stored.
+- `PHOTO_UPLOAD_DB_PATH` — SQLite database path for upload metadata.
+- `PHOTO_ADMIN_TOKEN` — token required for protected admin API routes.
+- `PHOTO_UPLOAD_ALLOWED_ORIGINS` — comma-separated list of allowed web origins for CORS.
+  - Example: `https://www.themcnears.com,https://photos.themcnears.com`
+
+### Optional frontend upload URL override
+
+If you serve `photo-upload-app` from a different hostname, set this before loading `app.js`:
+
+```html
+<script>
+  window.PHOTO_UPLOAD_CONFIG = {
+    uploadUrl: 'https://photos.themcnears.com/api/upload'
+  };
+</script>
+```
