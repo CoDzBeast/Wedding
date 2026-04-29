@@ -23,10 +23,12 @@ const progressWrap = document.getElementById('upload-progress-wrap');
 const progressFill = document.getElementById('progress-fill');
 const progressPercent = document.getElementById('progress-percent');
 const progressLabel = document.getElementById('progress-label');
+const usePhotoBtn = document.getElementById('use-photo-btn');
 
 let stream;
 let facingMode = 'environment';
 let capturedBlob;
+let previewUrl;
 
 function showScreen(name) {
   Object.values(screens).forEach((screen) => screen.classList.remove('active'));
@@ -38,6 +40,24 @@ function setProgress(percent, label) {
   progressFill.style.width = `${Math.max(0, Math.min(100, percent))}%`;
   progressPercent.textContent = `${Math.round(percent)}%`;
   progressLabel.textContent = label;
+}
+
+function setPreviewUrl(url) {
+  if (previewUrl) URL.revokeObjectURL(previewUrl);
+  previewUrl = url;
+  preview.src = url;
+}
+
+function showSelectedPreview() {
+  const [file] = Array.from(mediaInput.files || []);
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    mediaInput.value = '';
+    throw new Error('Please choose image files only.');
+  }
+  capturedBlob = null;
+  setPreviewUrl(URL.createObjectURL(file));
+  showScreen('review');
 }
 
 async function startCamera() {
@@ -67,7 +87,7 @@ function capturePhoto() {
   canvas.toBlob((blob) => {
     if (!blob) return;
     capturedBlob = blob;
-    preview.src = URL.createObjectURL(blob);
+    setPreviewUrl(URL.createObjectURL(blob));
     showScreen('review');
   }, 'image/jpeg', 0.92);
 }
@@ -75,7 +95,15 @@ function capturePhoto() {
 function uploadWithProgress(formData, onProgress) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
+    const fallbackTimers = [
+      setTimeout(() => onProgress(15), 400),
+      setTimeout(() => onProgress(35), 1200),
+      setTimeout(() => onProgress(65), 3000),
+    ];
+    const settle = () => fallbackTimers.forEach((timer) => clearTimeout(timer));
+
     xhr.open('POST', UPLOAD_URL);
+    onProgress(5);
     xhr.upload.onprogress = (event) => {
       if (!event.lengthComputable) {
         onProgress(90);
@@ -85,6 +113,7 @@ function uploadWithProgress(formData, onProgress) {
       onProgress(Math.min(percent, 99));
     };
     xhr.onload = () => {
+      settle();
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(xhr.responseText);
         return;
@@ -97,15 +126,20 @@ function uploadWithProgress(formData, onProgress) {
       } catch (_error) {}
       reject(new Error(message));
     };
-    xhr.onerror = () => reject(new Error('Network error while uploading'));
+    xhr.onerror = () => {
+      settle();
+      reject(new Error('Network error while uploading'));
+    };
     xhr.send(formData);
   });
 }
 
 async function uploadPhoto(e) {
   e.preventDefault();
+  usePhotoBtn.disabled = true;
   const selectedFiles = Array.from(mediaInput.files || []);
   if (!capturedBlob && selectedFiles.length === 0) throw new Error('Capture or choose at least one file');
+  if (selectedFiles.some((file) => !file.type.startsWith('image/'))) throw new Error('Please choose image files only.');
 
   const files = [...selectedFiles];
   if (capturedBlob) files.unshift(new File([capturedBlob], `guest-${Date.now()}.jpg`, { type: 'image/jpeg' }));
@@ -119,7 +153,10 @@ async function uploadPhoto(e) {
     formData.delete('media');
     formData.append('files', file, file.name);
     await uploadWithProgress(formData, (percent) => {
-      const totalPercent = ((completed + percent / 100) / files.length) * 100;
+      const totalPercent = Math.max(
+        completed === 0 ? 0 : (completed / files.length) * 100,
+        ((completed + percent / 100) / files.length) * 100
+      );
       setProgress(totalPercent, `Uploading ${completed + 1} of ${files.length}`);
     });
     completed += 1;
@@ -140,21 +177,28 @@ newPhotoBtn.addEventListener('click', async () => {
   capturedBlob = null;
   mediaInput.value = '';
   progressWrap.classList.add('hidden');
-  setProgress(0, 'Uploading...');
+  progressFill.style.width = '0%';
+  progressPercent.textContent = '0%';
+  progressLabel.textContent = 'Uploading...';
   await startCamera();
 });
 galleryBtn.addEventListener('click', () => {
   mediaInput.click();
 });
 mediaInput.addEventListener('change', () => {
-  if ((mediaInput.files || []).length > 0 && !capturedBlob) {
-    showScreen('review');
+  try {
+    if ((mediaInput.files || []).length > 0) showSelectedPreview();
+  } catch (err) {
+    errorMessage.textContent = err.message;
+    showScreen('error');
   }
 });
 
 form.addEventListener('submit', (e) => uploadPhoto(e).catch((err) => {
   errorMessage.textContent = err.message;
   showScreen('error');
+}).finally(() => {
+  usePhotoBtn.disabled = false;
 }));
 
 startCamera();
