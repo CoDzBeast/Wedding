@@ -9,12 +9,16 @@ const screens = {
 
 const video = document.getElementById('camera');
 const canvas = document.getElementById('capture-canvas');
+const overlayCanvas = document.getElementById('overlay-canvas');
 const preview = document.getElementById('preview');
 const form = document.getElementById('upload-form');
 const mediaInput = document.getElementById('media-input');
 const captureBtn = document.getElementById('capture-btn');
 const switchCameraBtn = document.getElementById('switch-camera');
 const galleryBtn = document.getElementById('gallery-btn');
+const filtersToggle = document.getElementById('filters-toggle');
+const filterSelector = document.getElementById('filter-selector');
+const filterOptions = Array.from(document.querySelectorAll('.filter-option'));
 const retakeBtn = document.getElementById('retake-btn');
 const newPhotoBtn = document.getElementById('new-photo-btn');
 const fallbackLink = document.getElementById('fallback-link');
@@ -31,10 +35,27 @@ let stream;
 let facingMode = 'environment';
 let capturedBlob;
 let previewUrl;
+let filtersEnabled = false;
+let activeFilter = 'classic';
+let overlayAnimationFrame;
+
+const overlayConfig = {
+  names: 'Zach & Sam',
+  date: '05.02.2026',
+  shortDate: '05.02.26',
+  hashtag: '#ZachAndSam',
+  accentColor: '#D4AF37',
+  textColor: '#FFFFFF',
+};
 
 function showScreen(name) {
   Object.values(screens).forEach((screen) => screen.classList.remove('active'));
   screens[name].classList.add('active');
+  if (name === 'camera' && filtersEnabled) {
+    startOverlayLoop();
+  } else if (name !== 'camera') {
+    stopOverlayLoop();
+  }
 }
 
 function showError(title, message) {
@@ -68,6 +89,62 @@ function showSelectedPreview() {
   showScreen('review');
 }
 
+function getOverlayRenderer() {
+  return window.WeddingOverlays && window.WeddingOverlays.renderWeddingOverlay;
+}
+
+function sizeOverlayCanvas() {
+  const rect = overlayCanvas.getBoundingClientRect();
+  const scale = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.round(rect.width * scale));
+  const height = Math.max(1, Math.round(rect.height * scale));
+  if (overlayCanvas.width !== width || overlayCanvas.height !== height) {
+    overlayCanvas.width = width;
+    overlayCanvas.height = height;
+  }
+  return { width, height };
+}
+
+function drawOverlayFrame() {
+  const ctx = overlayCanvas.getContext('2d');
+  const { width, height } = sizeOverlayCanvas();
+  ctx.clearRect(0, 0, width, height);
+
+  if (filtersEnabled && screens.camera.classList.contains('active')) {
+    const renderWeddingOverlay = getOverlayRenderer();
+    if (renderWeddingOverlay) renderWeddingOverlay(ctx, width, height, activeFilter, overlayConfig);
+    overlayAnimationFrame = requestAnimationFrame(drawOverlayFrame);
+  }
+}
+
+function startOverlayLoop() {
+  if (overlayAnimationFrame) return;
+  overlayCanvas.classList.remove('hidden');
+  drawOverlayFrame();
+}
+
+function stopOverlayLoop() {
+  if (overlayAnimationFrame) cancelAnimationFrame(overlayAnimationFrame);
+  overlayAnimationFrame = null;
+  const ctx = overlayCanvas.getContext('2d');
+  ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+  if (!filtersEnabled) overlayCanvas.classList.add('hidden');
+}
+
+function updateFilterControls() {
+  filtersToggle.setAttribute('aria-pressed', String(filtersEnabled));
+  filtersToggle.classList.toggle('active', filtersEnabled);
+  filterSelector.classList.toggle('hidden', !filtersEnabled);
+  filterOptions.forEach((button) => {
+    button.classList.toggle('active', button.dataset.filter === activeFilter);
+  });
+  if (filtersEnabled && screens.camera.classList.contains('active')) {
+    startOverlayLoop();
+  } else {
+    stopOverlayLoop();
+  }
+}
+
 async function startCamera() {
   try {
     if (stream) stream.getTracks().forEach((t) => t.stop());
@@ -77,6 +154,8 @@ async function startCamera() {
     });
     video.srcObject = stream;
     showScreen('camera');
+    sizeOverlayCanvas();
+    updateFilterControls();
   } catch (_error) {
     if (stream) stream.getTracks().forEach((t) => t.stop());
     stream = null;
@@ -94,6 +173,10 @@ function capturePhoto() {
   canvas.height = 1080;
   const ctx = canvas.getContext('2d');
   ctx.drawImage(video, sx, sy, size, size, 0, 0, 1080, 1080);
+  if (filtersEnabled) {
+    const renderWeddingOverlay = getOverlayRenderer();
+    if (renderWeddingOverlay) renderWeddingOverlay(ctx, canvas.width, canvas.height, activeFilter, overlayConfig);
+  }
   canvas.toBlob((blob) => {
     if (!blob) return;
     capturedBlob = blob;
@@ -178,6 +261,17 @@ async function uploadPhoto(e) {
 }
 
 captureBtn.addEventListener('click', capturePhoto);
+filtersToggle.addEventListener('click', () => {
+  filtersEnabled = !filtersEnabled;
+  updateFilterControls();
+});
+filterOptions.forEach((button) => {
+  button.addEventListener('click', () => {
+    activeFilter = button.dataset.filter;
+    updateFilterControls();
+    if (filtersEnabled) drawOverlayFrame();
+  });
+});
 switchCameraBtn.addEventListener('click', async () => {
   facingMode = facingMode === 'environment' ? 'user' : 'environment';
   await startCamera();
@@ -210,10 +304,22 @@ mediaInput.addEventListener('change', () => {
   }
 });
 
+window.addEventListener('resize', () => {
+  sizeOverlayCanvas();
+  if (filtersEnabled) drawOverlayFrame();
+});
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => {
+    sizeOverlayCanvas();
+    if (filtersEnabled) drawOverlayFrame();
+  }, 250);
+});
+
 form.addEventListener('submit', (e) => uploadPhoto(e).catch((err) => {
   showError('Upload Failed', err.message);
 }).finally(() => {
   usePhotoBtn.disabled = false;
 }));
 
+updateFilterControls();
 startCamera();
