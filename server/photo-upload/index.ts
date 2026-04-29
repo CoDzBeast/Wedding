@@ -79,10 +79,17 @@ function requireAdmin(req: express.Request, res: express.Response, next: express
 }
 
 export function registerPhotoUploadModule(app: Express) {
+  // Support both prefixed and root static paths so the upload page continues
+  // to work when a reverse proxy rewrites /photo-upload to /.
   app.use('/photo-upload/static', express.static(path.resolve(process.cwd(), 'photo-upload-app')));
+  app.use('/static', express.static(path.resolve(process.cwd(), 'photo-upload-app')));
   app.use('/uploads', requireAdmin, express.static(UPLOADS_DIR));
 
   app.get('/photo-upload', (_req, res) => {
+    res.sendFile(path.resolve(process.cwd(), 'photo-upload-app/index.html'));
+  });
+
+  app.get('/photo-upload/', (_req, res) => {
     res.sendFile(path.resolve(process.cwd(), 'photo-upload-app/index.html'));
   });
 
