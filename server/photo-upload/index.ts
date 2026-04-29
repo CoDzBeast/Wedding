@@ -5,11 +5,8 @@ import express from 'express';
 import multer, { type FileFilterCallback } from 'multer';
 import sqlite3 from 'sqlite3';
 
-// Configure DB path here.
 const DB_PATH = process.env.PHOTO_UPLOAD_DB_PATH || path.resolve(process.cwd(), 'server/photo-upload/photo_upload.sqlite');
-// Configure uploads folder here.
 const UPLOADS_DIR = process.env.PHOTO_UPLOADS_DIR || path.resolve(process.cwd(), 'uploads');
-// Configure admin token here (and place behind Cloudflare/public hostname + tunnel policy).
 const ADMIN_TOKEN = process.env.PHOTO_ADMIN_TOKEN || 'change-me';
 const UPLOAD_TOKEN = process.env.PHOTO_UPLOAD_TOKEN || '';
 const MAX_UPLOAD_MB = Number.parseInt(process.env.PHOTO_UPLOAD_MAX_MB || '20', 10);
@@ -48,8 +45,8 @@ const upload = multer({
   storage,
   limits: { fileSize: MAX_UPLOAD_MB * 1024 * 1024 },
   fileFilter: (_req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-    if (file.mimetype.startsWith('image/')) cb(null, true);
-    else cb(new Error('Only image uploads are allowed'));
+    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) cb(null, true);
+    else cb(new Error('Only image and video uploads are allowed'));
   },
 });
 
@@ -58,7 +55,6 @@ function requireUploadToken(req: express.Request, res: express.Response, next: e
   if (req.headers['x-upload-token'] !== UPLOAD_TOKEN) return res.status(403).json({ message: 'Forbidden' });
   next();
 }
-
 
 function uploadsEnabledNow() {
   if (!UPLOAD_ENABLE_UNTIL) return true;
@@ -101,20 +97,26 @@ export function registerPhotoUploadModule(app: Express) {
     });
   });
 
-  app.post('/api/upload', requireUploadsEnabled, requireUploadToken, upload.single('photo'), (req: Request, res) => {
-    if (!req.file) return res.status(400).json({ message: 'Photo is required' });
+  app.post('/api/upload', requireUploadsEnabled, requireUploadToken, upload.array('files', 30), (req: Request, res) => {
+    const uploadedFiles = (req.files as Express.Multer.File[] | undefined) ?? [];
+    if (!uploadedFiles.length) return res.status(400).json({ message: 'At least one photo or video is required' });
+
     const uploadedAt = new Date().toISOString();
     const guestName = typeof req.body.guestName === 'string' ? req.body.guestName : '';
     const message = typeof req.body.message === 'string' ? req.body.message : '';
 
-    db.run(
-      `INSERT INTO uploads (filename, originalName, mimeType, sizeBytes, uploadedAt, guestName, message) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [req.file.filename, req.file.originalname, req.file.mimetype, req.file.size, uploadedAt, guestName, message],
-      (err: Error | null) => {
-        if (err) return res.status(500).json({ message: 'Failed to save metadata' });
-        res.status(201).json({ ok: true, filename: req.file?.filename });
-      }
+    const stmt = db.prepare(
+      `INSERT INTO uploads (filename, originalName, mimeType, sizeBytes, uploadedAt, guestName, message) VALUES (?, ?, ?, ?, ?, ?, ?)`
     );
+
+    for (const file of uploadedFiles) {
+      stmt.run([file.filename, file.originalname, file.mimetype, file.size, uploadedAt, guestName, message]);
+    }
+
+    stmt.finalize((err: Error | null) => {
+      if (err) return res.status(500).json({ message: 'Failed to save metadata' });
+      res.status(201).json({ ok: true, uploaded: uploadedFiles.length, files: uploadedFiles.map((f) => f.filename) });
+    });
   });
 
   app.get('/photo-admin', requireAdmin, (_req, res) => {

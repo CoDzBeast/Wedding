@@ -37,9 +37,16 @@
         <form id="upload-form" class="meta-form">
           <label>Guest Name (optional)<input type="text" name="guestName" maxlength="80" /></label>
           <label>Message (optional)<textarea name="message" rows="2" maxlength="200"></textarea></label>
+                    <label>Add from gallery (optional)
+            <input id="media-input" type="file" name="media" accept="image/*,video/*" multiple />
+          </label>
+          <div id="upload-progress-wrap" class="progress-wrap hidden" aria-live="polite">
+            <div class="progress-meta"><span id="progress-label">Uploading...</span><span id="progress-percent">0%</span></div>
+            <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+          </div>
           <div class="action-row">
             <button type="button" id="retake-btn" class="secondary">Retake</button>
-            <button type="submit" id="use-photo-btn" class="primary">Use Photo</button>
+            <button type="submit" id="use-photo-btn" class="primary">Upload</button>
           </div>
         </form>
       </section>
