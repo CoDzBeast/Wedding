@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Wedding Photo Upload</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section id="camera-screen" class="screen active">
+        <header class="top-bar">
+          <h1>Guest Camera</h1>
+        </header>
+
+        <div class="camera-shell">
+          <div class="camera-square">
+            <video id="camera" autoplay playsinline muted></video>
+            <canvas id="capture-canvas" class="hidden"></canvas>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="switch-camera" class="control-btn">Flip</button>
+          <button id="capture-btn" class="shutter" aria-label="Take photo"></button>
+          <span class="spacer"></span>
+        </div>
+      </section>
+
+      <section id="review-screen" class="screen">
+        <header class="top-bar"><h2>Review Photo</h2></header>
+        <div class="camera-shell">
+          <div class="camera-square">
+            <img id="preview" alt="Captured preview" />
+          </div>
+        </div>
+        <form id="upload-form" class="meta-form">
+          <label>Guest Name (optional)<input type="text" name="guestName" maxlength="80" /></label>
+          <label>Message (optional)<textarea name="message" rows="2" maxlength="200"></textarea></label>
+                    <label>Add from gallery (optional)
+            <input id="media-input" type="file" name="media" accept="image/*,video/*" multiple />
+          </label>
+          <div id="upload-progress-wrap" class="progress-wrap hidden" aria-live="polite">
+            <div class="progress-meta"><span id="progress-label">Uploading...</span><span id="progress-percent">0%</span></div>
+            <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+          </div>
+          <div class="action-row">
+            <button type="button" id="retake-btn" class="secondary">Retake</button>
+            <button type="submit" id="use-photo-btn" class="primary">Upload</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="success-screen" class="screen">
+        <div class="success-card">
+          <h2>Thank you! 💍</h2>
+          <p>Your photo was uploaded successfully.</p>
+          <button id="new-photo-btn" class="primary">Take Another</button>
+        </div>
+      </section>
+
+      <section id="error-screen" class="screen">
+        <div class="success-card">
+          <h2>Camera access unavailable</h2>
+          <p id="error-message">Please allow camera permissions and try again.</p>
+          <a id="fallback-link" class="primary" href="#">Use device camera instead</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
