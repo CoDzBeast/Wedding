@@ -90,16 +90,14 @@ function uploadWithProgress(formData, onProgress) {
         return;
       }
 
-      let message = 'Upload failed';
+      let message = `Upload failed (${xhr.status})`;
       try {
-        const payload = JSON.parse(xhr.responseText || '{}');
-        if (typeof payload.message === 'string' && payload.message.trim()) message = payload.message;
-      } catch (_err) {
-        // Use default message when server response is not JSON.
-      }
+        const body = JSON.parse(xhr.responseText);
+        message = body?.error?.message || body?.message || message;
+      } catch (_error) {}
       reject(new Error(message));
     };
-    xhr.onerror = () => reject(new Error('Upload failed. Please check your connection and try again.'));
+    xhr.onerror = () => reject(new Error('Network error while uploading'));
     xhr.send(formData);
   });
 }
@@ -118,6 +116,7 @@ async function uploadPhoto(e) {
   let completed = 0;
   for (const file of files) {
     const formData = new FormData(form);
+    formData.delete('media');
     formData.append('files', file, file.name);
     await uploadWithProgress(formData, (percent) => {
       const totalPercent = ((completed + percent / 100) / files.length) * 100;

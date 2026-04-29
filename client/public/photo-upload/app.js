@@ -77,11 +77,27 @@ function uploadWithProgress(formData, onProgress) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', UPLOAD_URL);
     xhr.upload.onprogress = (event) => {
-      if (!event.lengthComputable) return;
-      onProgress((event.loaded / event.total) * 100);
+      if (!event.lengthComputable) {
+        onProgress(90);
+        return;
+      }
+      const percent = (event.loaded / event.total) * 100;
+      onProgress(Math.min(percent, 99));
     };
-    xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve(xhr.responseText) : reject(new Error('Upload failed')));
-    xhr.onerror = () => reject(new Error('Upload failed'));
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(xhr.responseText);
+        return;
+      }
+
+      let message = `Upload failed (${xhr.status})`;
+      try {
+        const body = JSON.parse(xhr.responseText);
+        message = body?.error?.message || body?.message || message;
+      } catch (_error) {}
+      reject(new Error(message));
+    };
+    xhr.onerror = () => reject(new Error('Network error while uploading'));
     xhr.send(formData);
   });
 }
@@ -94,9 +110,13 @@ async function uploadPhoto(e) {
   const files = [...selectedFiles];
   if (capturedBlob) files.unshift(new File([capturedBlob], `guest-${Date.now()}.jpg`, { type: 'image/jpeg' }));
 
+  progressWrap.classList.remove('hidden');
+  setProgress(0, `Preparing ${files.length} file${files.length === 1 ? '' : 's'}...`);
+
   let completed = 0;
   for (const file of files) {
     const formData = new FormData(form);
+    formData.delete('media');
     formData.append('files', file, file.name);
     await uploadWithProgress(formData, (percent) => {
       const totalPercent = ((completed + percent / 100) / files.length) * 100;
@@ -106,6 +126,7 @@ async function uploadPhoto(e) {
     setProgress((completed / files.length) * 100, `Uploading ${completed} of ${files.length}`);
   }
 
+  setProgress(100, 'Upload complete');
   showScreen('success');
 }
 
