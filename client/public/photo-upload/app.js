@@ -71,7 +71,7 @@ function restoreCameraControls() {
   });
   fullscreenControls.setAttribute('aria-hidden', 'true');
   if (controlHomes.controls.parentElement !== controlHomes.controlsParent) {
-    controlHomes.controlsParent.insertBefore(controlHomes.controls, screens.review);
+    controlHomes.controlsParent.appendChild(controlHomes.controls);
   }
   if (controlHomes.modeSwitch.parentElement !== controlHomes.modeParent) {
     controlHomes.modeParent.insertBefore(controlHomes.modeSwitch, controlHomes.controls);
