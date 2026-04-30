@@ -155,6 +155,10 @@ function sizeOverlayCanvas() {
   return { width, height };
 }
 
+function isSelfieMode() {
+  return facingMode === 'user';
+}
+
 function getCoverCrop(source, width, height) {
   const sourceWidth = source.videoWidth || source.naturalWidth || source.width;
   const sourceHeight = source.videoHeight || source.naturalHeight || source.height;
@@ -181,16 +185,24 @@ function getCoverCrop(source, width, height) {
   };
 }
 
-function drawCameraFrame(ctx, source, width, height) {
+function drawVideoCover(ctx, source, width, height, mirror = false) {
   const crop = getCoverCrop(source, width, height);
   if (!crop) return false;
+
+  ctx.save();
+  if (mirror) {
+    ctx.translate(width, 0);
+    ctx.scale(-1, 1);
+  }
   ctx.drawImage(source, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, width, height);
+  ctx.restore();
+
   return true;
 }
 
 function drawFilteredFrame(ctx, source, width, height, filterName) {
   ctx.clearRect(0, 0, width, height);
-  if (!drawCameraFrame(ctx, source, width, height)) return false;
+  if (!drawVideoCover(ctx, source, width, height, isSelfieMode())) return false;
   const renderWeddingOverlay = getOverlayRenderer();
   if (renderWeddingOverlay) renderWeddingOverlay(ctx, width, height, filterName, overlayConfig);
   return true;
@@ -199,7 +211,7 @@ function drawFilteredFrame(ctx, source, width, height, filterName) {
 function drawCurrentCameraFrame(ctx, width, height) {
   if (filtersEnabled) return drawFilteredFrame(ctx, video, width, height, activeFilter);
   ctx.clearRect(0, 0, width, height);
-  return drawCameraFrame(ctx, video, width, height);
+  return drawVideoCover(ctx, video, width, height, isSelfieMode());
 }
 
 function paintOverlayFrame(timestamp = performance.now(), force = false) {
