@@ -65,7 +65,17 @@ const controlHomes = {
   controlsParent: document.querySelector('.controls').parentElement,
 };
 
+function restoreCameraControls() {
+  if (controlHomes.controls.parentElement !== controlHomes.controlsParent) {
+    controlHomes.controlsParent.insertBefore(controlHomes.controls, screens.review);
+  }
+  if (controlHomes.modeSwitch.parentElement !== controlHomes.modeParent) {
+    controlHomes.modeParent.insertBefore(controlHomes.modeSwitch, controlHomes.controls);
+  }
+}
+
 function showScreen(name) {
+  restoreCameraControls();
   Object.values(screens).forEach((screen) => screen.classList.remove('active'));
   screens[name].classList.add('active');
   if (name === 'camera' && filtersEnabled) {
@@ -196,9 +206,11 @@ function setCaptureMode(mode) {
 
 function enterFullscreenCamera(box) {
   box.classList.add('fullscreen');
-  fullscreenControls.setAttribute('aria-hidden', 'false');
-  fullscreenControls.appendChild(controlHomes.modeSwitch);
-  fullscreenControls.appendChild(controlHomes.controls);
+  if (box.contains(fullscreenControls)) {
+    fullscreenControls.setAttribute('aria-hidden', 'false');
+    fullscreenControls.appendChild(controlHomes.modeSwitch);
+    fullscreenControls.appendChild(controlHomes.controls);
+  }
   setTimeout(() => {
     sizeOverlayCanvas();
     if (filtersEnabled) drawOverlayFrame();
@@ -208,8 +220,7 @@ function enterFullscreenCamera(box) {
 function exitFullscreenCamera(box) {
   box.classList.remove('fullscreen');
   fullscreenControls.setAttribute('aria-hidden', 'true');
-  controlHomes.modeParent.insertBefore(controlHomes.modeSwitch, controlHomes.controls);
-  controlHomes.controlsParent.insertBefore(controlHomes.controls, screens.review);
+  restoreCameraControls();
   setTimeout(() => {
     sizeOverlayCanvas();
     if (filtersEnabled) drawOverlayFrame();
