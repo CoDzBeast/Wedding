@@ -66,6 +66,10 @@ const controlHomes = {
 };
 
 function restoreCameraControls() {
+  document.querySelectorAll('.camera-square.fullscreen').forEach((box) => {
+    box.classList.remove('fullscreen');
+  });
+  fullscreenControls.setAttribute('aria-hidden', 'true');
   if (controlHomes.controls.parentElement !== controlHomes.controlsParent) {
     controlHomes.controlsParent.insertBefore(controlHomes.controls, screens.review);
   }
