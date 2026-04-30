@@ -43,11 +43,16 @@ let previewUrl;
 let filtersEnabled = false;
 let activeFilter = 'classic';
 let overlayAnimationFrame;
+let lastOverlayFrameAt = 0;
 let captureMode = 'photo';
 let mediaRecorder;
+let recordingCanvasStream;
+let recordingAnimationFrame;
+let lastRecordingFrameAt = 0;
 let recordedChunks = [];
 let recordingStartedAt = 0;
 let recordingTimer;
+const FRAME_INTERVAL = 1000 / 30;
 
 const overlayConfig = {
   names: 'Zach & Sam',
@@ -150,34 +155,96 @@ function sizeOverlayCanvas() {
   return { width, height };
 }
 
-function drawOverlayFrame() {
-  const ctx = overlayCanvas.getContext('2d');
-  const { width, height } = sizeOverlayCanvas();
-  ctx.clearRect(0, 0, width, height);
+function getCoverCrop(source, width, height) {
+  const sourceWidth = source.videoWidth || source.naturalWidth || source.width;
+  const sourceHeight = source.videoHeight || source.naturalHeight || source.height;
+  if (!sourceWidth || !sourceHeight || !width || !height) return null;
 
-  if (filtersEnabled && screens.camera.classList.contains('active')) {
-    const renderWeddingOverlay = getOverlayRenderer();
-    if (renderWeddingOverlay) renderWeddingOverlay(ctx, width, height, activeFilter, overlayConfig);
-    overlayAnimationFrame = requestAnimationFrame(drawOverlayFrame);
+  const targetRatio = width / height;
+  const sourceRatio = sourceWidth / sourceHeight;
+  if (sourceRatio > targetRatio) {
+    const cropWidth = sourceHeight * targetRatio;
+    return {
+      sx: (sourceWidth - cropWidth) / 2,
+      sy: 0,
+      sw: cropWidth,
+      sh: sourceHeight,
+    };
   }
+
+  const cropHeight = sourceWidth / targetRatio;
+  return {
+    sx: 0,
+    sy: (sourceHeight - cropHeight) / 2,
+    sw: sourceWidth,
+    sh: cropHeight,
+  };
+}
+
+function drawCameraFrame(ctx, source, width, height) {
+  const crop = getCoverCrop(source, width, height);
+  if (!crop) return false;
+  ctx.drawImage(source, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, width, height);
+  return true;
+}
+
+function drawFilteredFrame(ctx, source, width, height, filterName) {
+  ctx.clearRect(0, 0, width, height);
+  if (!drawCameraFrame(ctx, source, width, height)) return false;
+  const renderWeddingOverlay = getOverlayRenderer();
+  if (renderWeddingOverlay) renderWeddingOverlay(ctx, width, height, filterName, overlayConfig);
+  return true;
+}
+
+function drawCurrentCameraFrame(ctx, width, height) {
+  if (filtersEnabled) return drawFilteredFrame(ctx, video, width, height, activeFilter);
+  ctx.clearRect(0, 0, width, height);
+  return drawCameraFrame(ctx, video, width, height);
+}
+
+function paintOverlayFrame(timestamp = performance.now(), force = false) {
+  if (!filtersEnabled || !screens.camera.classList.contains('active')) {
+    return false;
+  }
+
+  if (force || timestamp - lastOverlayFrameAt >= FRAME_INTERVAL) {
+    const ctx = overlayCanvas.getContext('2d');
+    const { width, height } = sizeOverlayCanvas();
+    if (drawFilteredFrame(ctx, video, width, height, activeFilter)) {
+      lastOverlayFrameAt = timestamp;
+    }
+  }
+
+  return true;
+}
+
+function drawOverlayFrame(timestamp = performance.now()) {
+  if (!paintOverlayFrame(timestamp)) {
+    overlayAnimationFrame = null;
+    return;
+  }
+  overlayAnimationFrame = requestAnimationFrame(drawOverlayFrame);
 }
 
 function startOverlayLoop() {
   if (overlayAnimationFrame) return;
+  lastOverlayFrameAt = 0;
   overlayCanvas.classList.remove('hidden');
-  drawOverlayFrame();
+  paintOverlayFrame(performance.now(), true);
+  overlayAnimationFrame = requestAnimationFrame(drawOverlayFrame);
 }
 
 function stopOverlayLoop() {
   if (overlayAnimationFrame) cancelAnimationFrame(overlayAnimationFrame);
   overlayAnimationFrame = null;
+  lastOverlayFrameAt = 0;
   const ctx = overlayCanvas.getContext('2d');
   ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-  if (!filtersEnabled) overlayCanvas.classList.add('hidden');
+  overlayCanvas.classList.add('hidden');
 }
 
 function updateFilterControls() {
-  const canUseFilters = captureMode === 'photo';
+  const canUseFilters = true;
   if (!canUseFilters) filtersEnabled = false;
   filtersToggle.disabled = !canUseFilters;
   filtersToggle.setAttribute('aria-pressed', String(filtersEnabled));
@@ -189,9 +256,11 @@ function updateFilterControls() {
   });
   if (filtersEnabled && screens.camera.classList.contains('active')) {
     startOverlayLoop();
+    paintOverlayFrame(performance.now(), true);
   } else {
     stopOverlayLoop();
   }
+  paintRecordingFrame(performance.now(), true);
 }
 
 function updateModeControls() {
@@ -217,7 +286,7 @@ function enterFullscreenCamera(box) {
   }
   setTimeout(() => {
     sizeOverlayCanvas();
-    if (filtersEnabled) drawOverlayFrame();
+    if (filtersEnabled) paintOverlayFrame(performance.now(), true);
   }, 120);
 }
 
@@ -227,7 +296,7 @@ function exitFullscreenCamera(box) {
   restoreCameraControls();
   setTimeout(() => {
     sizeOverlayCanvas();
-    if (filtersEnabled) drawOverlayFrame();
+    if (filtersEnabled) paintOverlayFrame(performance.now(), true);
   }, 120);
 }
 
@@ -257,17 +326,10 @@ async function startCamera() {
 }
 
 function capturePhoto() {
-  const size = Math.min(video.videoWidth, video.videoHeight);
-  const sx = (video.videoWidth - size) / 2;
-  const sy = (video.videoHeight - size) / 2;
   canvas.width = 1080;
   canvas.height = 1080;
   const ctx = canvas.getContext('2d');
-  ctx.drawImage(video, sx, sy, size, size, 0, 0, 1080, 1080);
-  if (filtersEnabled) {
-    const renderWeddingOverlay = getOverlayRenderer();
-    if (renderWeddingOverlay) renderWeddingOverlay(ctx, canvas.width, canvas.height, activeFilter, overlayConfig);
-  }
+  drawCurrentCameraFrame(ctx, canvas.width, canvas.height);
   canvas.toBlob((blob) => {
     if (!blob) return;
     capturedBlob = blob;
@@ -293,6 +355,30 @@ function updateRecordingLabel() {
   captureBtn.setAttribute('aria-label', `Stop recording, ${elapsed} seconds`);
 }
 
+function stopRecordingLoop() {
+  if (recordingAnimationFrame) cancelAnimationFrame(recordingAnimationFrame);
+  recordingAnimationFrame = null;
+  lastRecordingFrameAt = 0;
+}
+
+function paintRecordingFrame(timestamp = performance.now(), force = false) {
+  if (!mediaRecorder || mediaRecorder.state !== 'recording') return false;
+  if (force || timestamp - lastRecordingFrameAt >= FRAME_INTERVAL) {
+    const ctx = canvas.getContext('2d');
+    drawCurrentCameraFrame(ctx, canvas.width, canvas.height);
+    lastRecordingFrameAt = timestamp;
+  }
+  return true;
+}
+
+function drawRecordingFrame(timestamp = performance.now()) {
+  if (!paintRecordingFrame(timestamp)) {
+    recordingAnimationFrame = null;
+    return;
+  }
+  recordingAnimationFrame = requestAnimationFrame(drawRecordingFrame);
+}
+
 function startRecording() {
   if (!stream || !window.MediaRecorder) {
     showError('Video Unavailable', 'This browser does not support in-browser video recording. You can still choose videos from your gallery.');
@@ -300,8 +386,12 @@ function startRecording() {
   }
 
   const mimeType = getSupportedVideoMime();
+  canvas.width = 1080;
+  canvas.height = 1080;
+  drawCurrentCameraFrame(canvas.getContext('2d'), canvas.width, canvas.height);
+  recordingCanvasStream = canvas.captureStream(30);
   recordedChunks = [];
-  mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+  mediaRecorder = new MediaRecorder(recordingCanvasStream, mimeType ? { mimeType } : undefined);
   mediaRecorder.ondataavailable = (event) => {
     if (event.data && event.data.size > 0) recordedChunks.push(event.data);
   };
@@ -310,6 +400,9 @@ function startRecording() {
     recordingTimer = null;
     recordingStartedAt = 0;
     captureBtn.classList.remove('recording');
+    stopRecordingLoop();
+    if (recordingCanvasStream) recordingCanvasStream.getTracks().forEach((track) => track.stop());
+    recordingCanvasStream = null;
 
     const type = mediaRecorder.mimeType || mimeType || 'video/webm';
     const extension = type.includes('mp4') ? 'mp4' : 'webm';
@@ -325,6 +418,8 @@ function startRecording() {
   captureBtn.classList.add('recording');
   updateRecordingLabel();
   recordingTimer = setInterval(updateRecordingLabel, 500);
+  paintRecordingFrame(performance.now(), true);
+  recordingAnimationFrame = requestAnimationFrame(drawRecordingFrame);
 }
 
 function stopRecording() {
@@ -429,7 +524,7 @@ filterOptions.forEach((button) => {
   button.addEventListener('click', () => {
     activeFilter = button.dataset.filter;
     updateFilterControls();
-    if (filtersEnabled) drawOverlayFrame();
+    if (filtersEnabled) paintOverlayFrame(performance.now(), true);
   });
 });
 switchCameraBtn.addEventListener('click', async () => {
@@ -467,12 +562,12 @@ mediaInput.addEventListener('change', () => {
 
 window.addEventListener('resize', () => {
   sizeOverlayCanvas();
-  if (filtersEnabled) drawOverlayFrame();
+  if (filtersEnabled) paintOverlayFrame(performance.now(), true);
 });
 window.addEventListener('orientationchange', () => {
   setTimeout(() => {
     sizeOverlayCanvas();
-    if (filtersEnabled) drawOverlayFrame();
+    if (filtersEnabled) paintOverlayFrame(performance.now(), true);
   }, 250);
 });
 
